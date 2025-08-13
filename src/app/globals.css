@@ -119,3 +119,17 @@
   }
 }
 
+@layer utilities {
+  .flex-Center {
+    @apply flex justify-center items-center;
+  }
+  .flex-Between {
+    @apply flex justify-between items-center;
+  }
+  .flex-Start {
+    @apply flex justify-start items-center;
+  }
+  .flex-End {
+    @apply flex justify-end items-center;
+  }
+}
