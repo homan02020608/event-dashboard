@@ -127,9 +127,10 @@
     @apply flex justify-between items-center;
   }
   .flex-Start {
-    @apply flex justify-start items-center;
+    @apply flex justify-start items-start;
   }
   .flex-End {
-    @apply flex justify-end items-center;
+    @apply flex justify-end items-end;
   }
+  
 }
