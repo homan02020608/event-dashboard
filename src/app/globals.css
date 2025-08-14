@@ -127,7 +127,7 @@
     @apply flex justify-between items-center;
   }
   .flex-Start {
-    @apply flex justify-start items-start;
+    @apply flex justify-start items-center;
   }
   .flex-End {
     @apply flex justify-end items-end;

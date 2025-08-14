@@ -16,7 +16,6 @@ import HomeIcon from '@mui/icons-material/Home';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import PaymentIcon from '@mui/icons-material/Payment';
 import CollectionsIcon from '@mui/icons-material/Collections';
-import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonIcon from '@mui/icons-material/Person';
 import { Button } from "./ui/button";
@@ -43,6 +42,11 @@ const items = [
     url: "/gallery",
     icon: CollectionsIcon,
   },
+  {
+    title: "設定",
+    url: "/",
+    icon: SettingsIcon,
+  },
 ]
 
 
@@ -68,30 +72,24 @@ export function AppSidebar() {
         </SidebarGroupContent>
         <SidebarGroup />
       </SidebarContent>
-      <SidebarFooter className="bg-black/80 flex-Start flex-row ">
-        <Button className="flex-Center hover:cursor-pointer transition-transform transform hover:scale-105 duration-100  ">
-          <SettingsIcon />
-
-        </Button>
+      <SidebarFooter className="bg-black/80 flex-Start flex-col">
         {
           isLogged ? (
-            <div className="flex-Center gap-2">
-              <Button className="flex-Center hover:cursor-pointer transition-transform transform hover:scale-105 duration-100 ">
+            <div className="flex-Between w-full">
+              <div className="flex-Center bg-white text-black rounded-full m-2 p-2 ">
                 <PersonIcon />
-              </Button>
-              <Button className="flex-Center hover:cursor-pointer transition-transform transform hover:scale-105 duration-100 ">
-                <LogoutIcon />
-              </Button>
+              </div>
+              <div className="flex-Start flex-col w-full font-semibold ">
+                <div className="w-full text-md ">ゲストさん</div>
+                <div className="w-full text-sm ">guestuser@gmail.com</div>
+              </div>
             </div>
           ) : (
             <Button className="flex-Center hover:cursor-pointer transition-transform transform hover:scale-105 duration-100 ">
               <LoginIcon />
-              <div></div>
             </Button>
           )
         }
-
-
       </SidebarFooter>
     </Sidebar>
   )
