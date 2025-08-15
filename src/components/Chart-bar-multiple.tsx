@@ -43,7 +43,7 @@ const chartConfig = {
 
 export function ChartBarMultiple() {
   return (
-    <Card className="max-w-3xl w-full mx-auto border-none shadow-xl ">
+    <Card className="max-w-xl  w-full mx-auto  border-none shadow-xl  ">
       <CardHeader>
         <CardTitle>2025年参戦データグラフ</CardTitle>
         <CardDescription>January - July 2025</CardDescription>

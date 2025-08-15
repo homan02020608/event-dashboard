@@ -1,11 +1,14 @@
 import React from 'react'
 import { ChartBarMultiple } from './Chart-bar-multiple'
+import { ChartLineLabel } from './Chart-line-label'
+import { EventTable } from './EventTable'
+
 
 const ChartSession = () => {
   return (
-    <div className='flex flex-col lg:flex-row gap-8 '>
+    <div className='flex flex-col gap-8 max-w-lg w-full  '>
         <ChartBarMultiple/>
-        <ChartBarMultiple/>
+        <ChartLineLabel/>
     </div>
   )
 }
