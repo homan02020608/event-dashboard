@@ -16,9 +16,24 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid())
   email String @unique
   name String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  event Event[]
+}
+
+model Event {
+  id String @id @default(cuid())
+  author User @relation(fields: [authorId] , references: [id])
+  authorId String
+  title String
+  date DateTime
+  region String
+  venue String
+  seat String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
 }
