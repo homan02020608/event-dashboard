@@ -1,7 +1,6 @@
 import React from 'react'
 import { ChartBarMultiple } from './Chart-bar-multiple'
 import { ChartLineLabel } from './Chart-line-label'
-import { EventTable } from './EventTable'
 
 
 const ChartSession = () => {

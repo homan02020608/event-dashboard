@@ -1,4 +1,4 @@
-import ChartSession from "@/components/ChartSession";
+import ChartSession from "@/components/chart/ChartSession";
 import { EventTable } from "@/components/EventTable";
 import HomePageInfoCardList from "@/components/HomePageInfoCardList";
 
