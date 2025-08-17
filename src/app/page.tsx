@@ -1,9 +1,10 @@
 import ChartSession from "@/components/chart/ChartSession";
 import { EventTable } from "@/components/EventTable";
 import HomePageInfoCardList from "@/components/HomePageInfoCardList";
+import { createClient } from "@/utils/supabase/server";
 
-export default function Home() {
-
+export default async function Home() {
+ 
   return (
     <div className="bg-white/70 shadow-2xl rounded-lg m-2 mx-4 p-2 *:m-4">
       <h1 className="text-2xl font-semibold">Welcome Guest!</h1>
