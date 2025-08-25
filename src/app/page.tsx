@@ -1,7 +1,6 @@
 import ChartSession from "@/components/chart/ChartSession";
 import { EventTable } from "@/components/EventTable";
 import HomePageInfoCardList from "@/components/HomePageInfoCardList";
-import { createClient } from "@/utils/supabase/server";
 
 export default async function Home() {
  
