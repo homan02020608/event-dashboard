@@ -33,7 +33,7 @@ model Event {
   region String
   venue String
   seat String
+  eventStartTime String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
 }
