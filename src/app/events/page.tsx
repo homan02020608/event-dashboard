@@ -5,7 +5,7 @@ import { EventCardTypesSource } from '@/types/type'
 import React from 'react'
 
 const page = async () => {
-  const events = await prisma.event.findMany()
+  const events = await prisma.event.findMany({ orderBy: { date: 'asc' } })
 
   return (
     <div className="bg-white/70 shadow-2xl rounded-lg m-2 mx-4 p-2">
@@ -19,6 +19,7 @@ const page = async () => {
               date={event.date}
               venue={event.venue}
               seat={event.seat}
+              eventStartTime={event.eventStartTime}
             />
           </div>
         ))}
