@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { createClient } from "@/utils/supabase/server"
 import { revalidatePath } from "next/cache"
 
+// ログインしているauthorIdでEvent項目を追加
 export async function createEvent(formData: FormData) {
     const supabase = createClient()
     const { data: { user } } = await (await supabase).auth.getUser()
@@ -24,4 +25,23 @@ export async function createEvent(formData: FormData) {
         }
     })
     revalidatePath('/events')
+}
+// userId(authorId)でEventデータ一覧を取得
+export async function getAllEventDataById() {
+    const supabase = createClient()
+    const { data: { user } } = await (await supabase).auth.getUser()
+
+    if (!user) {
+        throw new Error('ログインしてください')
+    }
+
+    const userEvent = await prisma.event.findMany({
+        where: {
+            authorId: '2ae55831-7e54-49fb-b041-d932ab4af21a'
+        },
+        orderBy: {
+            date: 'asc'
+        }
+    })
+    return userEvent
 }
