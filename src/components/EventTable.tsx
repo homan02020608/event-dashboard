@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { EventCardTypesSource } from "@/types/type"
 
 const invoices = [
   {
@@ -54,7 +55,12 @@ const invoices = [
   },
 ]
 
-export function EventTable() {
+type EventsListProps = {
+  events: EventCardTypesSource[]
+}
+
+export function EventTable({ events }: EventsListProps) {
+
   return (
     <div className="max-w-xl lg:max-w-2xl w-full p-8 rounded-xl shadow-xl overflow-x-auto">
       <Table>
@@ -67,11 +73,11 @@ export function EventTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.Event}>
-              <TableCell className="font-medium  ">{invoice.Event}</TableCell>
-              <TableCell className=" ">{invoice.region}</TableCell>
-              <TableCell className="text-right ">01/01</TableCell>
+          {events.map((event) => (
+            <TableRow key={event.id}>
+              <TableCell className="font-medium  ">{event.title}</TableCell>
+              <TableCell className=" ">{event.region}</TableCell>
+              <TableCell className="text-right ">{event.date?.toLocaleDateString('ja-JP')}</TableCell>
               <TableCell className="text-right ">済</TableCell>
             </TableRow>
           ))}

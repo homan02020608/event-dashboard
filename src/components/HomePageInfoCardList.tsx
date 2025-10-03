@@ -1,20 +1,26 @@
 import React from 'react'
 import HomePageInfoCard from './HomePageInfoCard'
 
-const HomePageInfoCardList = () => {
+type infoCardProps = {
+    eventCount: number
+    recentEventTitle: string
+}
+
+const HomePageInfoCardList = async ({ eventCount ,recentEventTitle }: infoCardProps) => {
+
     return (
         <div className='flex-Center flex-col lg:flex-row gap-8 lg:gap-12 '>
             <HomePageInfoCard
                 title='累計参戦数'
-                infoData={`30`}
+                infoData={`${eventCount}`}
             />
             <HomePageInfoCard
                 title='年間支出'
-                infoData={`¥${20000}`}
+                infoData={`¥${10000 * eventCount}`}
             />
             <HomePageInfoCard
                 title='次のイベント'
-                infoData={`東京公演`}
+                infoData={`${recentEventTitle}`}
             />
         </div>
     )

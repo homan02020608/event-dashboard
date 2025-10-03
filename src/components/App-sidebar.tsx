@@ -18,6 +18,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonIcon from '@mui/icons-material/Person';
+import NotesIcon from '@mui/icons-material/Notes';
 import { Button } from "./ui/button";
 import { useState } from "react";
 
@@ -36,6 +37,11 @@ const items = [
     title: "費用一覧",
     url: "/expenses",
     icon: PaymentIcon,
+  },
+  {
+    title: "ミーグリレポ",
+    url: "/repo",
+    icon: NotesIcon,
   },
   {
     title: "参戦写真",
