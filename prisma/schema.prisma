@@ -22,6 +22,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   event Event[]
+  report Report[]
 }
 
 model Event {
@@ -36,4 +37,21 @@ model Event {
   eventStartTime String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Report {
+  id String @id @default(cuid())
+  author User @relation(fields: [authodId] , references: [id])
+  authodId String
+  part Int
+  sheets Int
+  repoType String
+  artistName String
+  date DateTime
+  venue String
+  tags String[]
+  conversations Json
+  bookmark Boolean @default(false)
+  createdAt DateTime
+  updatedAt DateTime
 }
