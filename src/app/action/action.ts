@@ -37,7 +37,8 @@ export async function getAllEventDataById() {
 
     const userEvent = await prisma.event.findMany({
         where: {
-            authorId: '2ae55831-7e54-49fb-b041-d932ab4af21a'
+            //authorId: '2ae55831-7e54-49fb-b041-d932ab4af21a'
+            authorId: user.id
         },
         orderBy: {
             date: 'asc'

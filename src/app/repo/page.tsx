@@ -9,7 +9,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import PersonIcon from '@mui/icons-material/Person';
+import MessageBubble from '@/components/repoUi/MessageBubble';
 
 const repoTestData = [
     {
@@ -61,30 +61,22 @@ const page = () => {
                                         <DialogHeader>
                                             <DialogTitle>{repo.title}</DialogTitle>
                                             {/* レポ表示 */}
-                                            <div className="flex items-end space-x-2 space-x-reverse justify-end border-4">
-                                                <div className="bg-blue-500 text-white p-2 rounded-lg max-w-xs">
-                                                    右揃い
-                                                </div>
-                                                <div className="w-8 h-8 rounded-full bg-blue-300"></div>
-                                            </div>
-                                            <div className="flex items-end space-x-2 border-4">
-                                                <div className="w-8 h-8 rounded-full bg-pink-300"></div>
-                                                <div className="bg-gray-200 text-black p-2 rounded-lg max-w-xs">
-                                                    左揃い
-                                                </div>
-                                            </div>
-                                            <div className="flex items-end space-x-2 border-4">
-                                                <div className="w-8 h-8 rounded-full bg-pink-300"></div>
-                                                <div className="bg-gray-200 text-black p-2 rounded-lg max-w-xs">
-                                                    左揃い
-                                                </div>
-                                            </div>
-                                            <div className="flex items-end space-x-2 space-x-reverse justify-end border-4">
-                                                <div className="bg-blue-500 text-white p-2 rounded-lg max-w-xs">
-                                                    右揃い
-                                                </div>
-                                                <div className="w-8 h-8 rounded-full bg-blue-300"></div>
-                                            </div>
+                                            <MessageBubble
+                                                sender='me'
+                                                text='やっほー'
+                                            />
+                                            <MessageBubble
+                                                sender='other'
+                                                text='やっほー'
+                                            />
+                                            <MessageBubble
+                                                sender='other'
+                                                text='バイバイ'
+                                            />
+                                            <MessageBubble
+                                                sender='me'
+                                                text='バイバイ'
+                                            />
                                         </DialogHeader>
                                     </DialogContent>
                                 </Dialog>
