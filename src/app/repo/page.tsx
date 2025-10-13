@@ -10,6 +10,8 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import MessageBubble from '@/components/repoUi/MessageBubble';
+import { getRepoData } from '../action/action';
+import AddRepoButton from '@/components/repoUi/AddRepoButton';
 
 const repoTestData = [
     {
@@ -38,10 +40,13 @@ const repoTestData = [
     },
 ]
 
-const page = () => {
+const page = async () => {
+    const repoData = await getRepoData();
+
     return (
         <div className='flex-Center flex-col   m-4 p-4 bg-white shadow-xl'>
             <h1>Repo Page</h1>
+            <AddRepoButton/>
             <div className='w-full'>
                 <div className='grid grid-cols-3 gap-4'>
                     {repoTestData.map((repo) => (

@@ -3,9 +3,10 @@ import EventCard from '@/components/eventUi/EventCard'
 import { prisma } from '@/lib/prisma'
 import { EventCardTypesSource } from '@/types/type'
 import React from 'react'
+import { getAllEventDataById } from '../action/action'
 
 const page = async () => {
-  const events = await prisma.event.findMany({ orderBy: { date: 'asc' } })
+  const events = await getAllEventDataById()
 
   return (
     <div className="bg-white/70 shadow-2xl rounded-lg m-2 mx-4 p-2">
