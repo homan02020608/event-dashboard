@@ -46,3 +46,22 @@ export async function getAllEventDataById() {
     })
     return userEvent
 }
+
+export async function getRepoData() {
+    const supabase = createClient()
+    const { data: { user } } = await (await supabase).auth.getUser()
+
+    if (!user) {
+        throw new Error('ログインしてください')
+    }
+
+    const allRepoDataList = await prisma.report.findMany({
+        where: {
+            authodId: user.id
+        },
+        orderBy: {
+            date: 'asc'
+        }
+    })
+    return allRepoDataList
+}
