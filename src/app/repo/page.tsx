@@ -71,11 +71,11 @@ const page = async () => {
                                                 text='やっほー'
                                             />
                                             <MessageBubble
-                                                sender='other'
+                                                sender='artist'
                                                 text='やっほー'
                                             />
                                             <MessageBubble
-                                                sender='other'
+                                                sender='artist'
                                                 text='バイバイ'
                                             />
                                             <MessageBubble

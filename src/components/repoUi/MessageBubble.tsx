@@ -2,7 +2,7 @@ import React from 'react'
 import PersonIcon from '@mui/icons-material/Person';
 
 interface MessageBubbleProps {
-    sender: 'me' | 'other';
+    sender: 'me' | 'artist';
     text: string;
 }
 
