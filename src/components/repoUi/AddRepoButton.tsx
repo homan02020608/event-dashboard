@@ -1,4 +1,5 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import {
     Dialog,
     DialogClose,
@@ -16,101 +17,280 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import {
+    Field,
+    FieldDescription,
+    FieldError,
+    FieldGroup,
+    FieldLabel,
+} from "@/components/ui/field"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import AddIcon from '@mui/icons-material/Add';
+import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Controller, useFieldArray, useForm } from "react-hook-form"
+import ClearIcon from '@mui/icons-material/Clear';
+
+const conversationSchema = z.object({
+    sender: z.enum(['user', 'artist']),
+    text: z.string().min(1, { message: '発言内容は必須です' }),
+})
+
+const formSchema = z.object({
+    artist_name: z.string().min(1),
+    venue: z.string().min(1),
+    repoType: z.string(),
+    part: z.string(),
+    sheets: z.string(),
+    conversations: z.array(conversationSchema).min(1, {
+        message: '会話を一つ以上追加してください',
+    }),
+})
 
 const AddRepoButton = () => {
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            artist_name: "",
+            venue: "",
+            repoType: "",
+            part: "",
+            sheets: "",
+            conversations: [{ sender: 'user', text: ''}]
+        }
+    })
+    const { fields, append, remove } = useFieldArray({
+        control: form.control,
+        name: 'conversations'
+    })
+    const onSubmit = (data: z.infer<typeof formSchema>) => {
+        const conversationsWithOrder = data.conversations.map((conversation, index) => ({
+            ...conversation,
+            order: index + 1,
+        }))
+        const finalData = {
+            ...data,
+            conversations: conversationsWithOrder
+        }
+        console.log("FormData:", data)
+        console.log('FinalData:',finalData)
+    }
+
     return (
         <div className='w-full py-2'>
             <Dialog>
-                <form>
-                    <DialogTrigger asChild>
-                        <Button variant="outline">レポ追加<AddIcon /></Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
+                <DialogTrigger asChild>
+                    <Button variant="outline">レポ追加<AddIcon /></Button>
+                </DialogTrigger>
+                <DialogContent className="">
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
                         <DialogHeader>
                             <DialogTitle>レポ追加</DialogTitle>
+                            <DialogDescription></DialogDescription>
                         </DialogHeader>
-                        <div className="grid gap-4">
-                            <div className="grid gap-2">
-                                <Label htmlFor="artist_name">アーティスト名</Label>
-                                <Input id="artist_name" name="artist_name" />
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="venue">会場名</Label>
-                                <Input id="venue" name="venue" />
-                            </div>
-                            <div className='flex-Center gap-4'>
-                                <div className="grid gap-2 w-full ">
-                                    <Label htmlFor="repoType">レポ種類</Label>
-                                    <Select>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="レポ種類選択" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="online_meeting">オンライン話し会</SelectItem>
-                                            <SelectItem value="real_meeting">リアル話し会</SelectItem>
-                                            <SelectItem value="online_sign">オンラインサイン会</SelectItem>
-                                            <SelectItem value="real_sign">リアルサイン会</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                        <FieldGroup className='p-2'>
+                            <div className="grid gap-4">
+                                <div className="grid gap-2">
+                                    <Controller
+                                        control={form.control}
+                                        name='artist_name'
+                                        render={({ field, fieldState }) => (
+                                            <Field data-invalid={fieldState.invalid}>
+                                                <FieldLabel>アーティスト名</FieldLabel>
+                                                <Input
+                                                    {...field}
+                                                    aria-invalid={fieldState.invalid}
+                                                    autoComplete='off'
+                                                />
+                                                {fieldState.invalid && (
+                                                    <FieldError errors={[fieldState.error]} />
+                                                )}
+                                            </Field>
+                                        )}
+                                    />
                                 </div>
-                                <div className="grid gap-2 w-full ">
-                                    <Label htmlFor="part">部数</Label>
-                                    <Select>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="部数選択" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="1">第1部</SelectItem>
-                                            <SelectItem value="2">第2部</SelectItem>
-                                            <SelectItem value="3">第3部</SelectItem>
-                                            <SelectItem value="4">第4部</SelectItem>
-                                            <SelectItem value="5">第5部</SelectItem>
-                                            <SelectItem value="6">第6部</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                <div className="grid gap-2">
+                                    <Controller
+                                        control={form.control}
+                                        name='venue'
+                                        render={({ field, fieldState }) => (
+                                            <Field data-invalid={fieldState.invalid}>
+                                                <FieldLabel>会場名</FieldLabel>
+                                                <Input
+                                                    {...field}
+                                                    aria-invalid={fieldState.invalid}
+                                                    autoComplete='off'
+                                                />
+                                                {fieldState.invalid && (
+                                                    <FieldError errors={[fieldState.error]} />
+                                                )}
+                                            </Field>
+                                        )}
+                                    />
                                 </div>
-                                <div className="grid gap-2 w-full ">
-                                    <Label htmlFor="sheets">枚数</Label>
-                                    <Select>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="枚数選択" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="1">1</SelectItem>
-                                            <SelectItem value="2">2</SelectItem>
-                                            <SelectItem value="3">3</SelectItem>
-                                            <SelectItem value="4">4</SelectItem>
-                                            <SelectItem value="5">5</SelectItem>
-                                            <SelectItem value="6">6</SelectItem>
-                                            <SelectItem value="7">7</SelectItem>
-                                            <SelectItem value="8">8</SelectItem>
-                                            <SelectItem value="9">9</SelectItem>
-                                            <SelectItem value="10">10</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                <div className='flex-Center gap-4'>
+                                    <div className="grid gap-2 w-full ">
+                                        <Controller
+                                            control={form.control}
+                                            name='repoType'
+                                            render={({ field }) => (
+                                                <Field>
+                                                    <FieldLabel>レポ種類</FieldLabel>
+                                                    <Select
+                                                        onValueChange={field.onChange}
+                                                        defaultValue={field.value}
+                                                    >
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="レポ種類選択" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectItem value="online_meeting">オンライン話し会</SelectItem>
+                                                            <SelectItem value="real_meeting">リアル話し会</SelectItem>
+                                                            <SelectItem value="online_sign">オンラインサイン会</SelectItem>
+                                                            <SelectItem value="real_sign">リアルサイン会</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </Field>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="grid gap-2 w-full ">
+                                        <Controller
+                                            control={form.control}
+                                            name='part'
+                                            render={({ field }) => (
+                                                <Field>
+                                                    <FieldLabel>部数</FieldLabel>
+                                                    <Select
+                                                        onValueChange={field.onChange}
+                                                        defaultValue={field.value}
+                                                    >
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="部数選択" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectItem value="1">第1部</SelectItem>
+                                                            <SelectItem value="2">第2部</SelectItem>
+                                                            <SelectItem value="3">第3部</SelectItem>
+                                                            <SelectItem value="4">第4部</SelectItem>
+                                                            <SelectItem value="5">第5部</SelectItem>
+                                                            <SelectItem value="6">第6部</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </Field>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="grid gap-2 w-full ">
+                                        <Controller
+                                            control={form.control}
+                                            name='sheets'
+                                            render={({ field }) => (
+                                                <Field>
+                                                    <FieldLabel>枚数</FieldLabel>
+                                                    <Select
+                                                        onValueChange={field.onChange}
+                                                        defaultValue={field.value}
+                                                    >
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="枚数選択" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectItem value="1">1</SelectItem>
+                                                            <SelectItem value="2">2</SelectItem>
+                                                            <SelectItem value="3">3</SelectItem>
+                                                            <SelectItem value="4">4</SelectItem>
+                                                            <SelectItem value="5">5</SelectItem>
+                                                            <SelectItem value="6">6</SelectItem>
+                                                            <SelectItem value="7">7</SelectItem>
+                                                            <SelectItem value="8">8</SelectItem>
+                                                            <SelectItem value="9">9</SelectItem>
+                                                            <SelectItem value="10">10</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </Field>
+                                            )}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="grid gap-4">
+                                    <Label htmlFor="conversations">会話レポ</Label>
+                                    <div className='flex flex-col gap-2 overflow-y-auto max-h-64 '>
+                                        {fields.map((field, index) => (
+                                            <div key={field.id} className='flex space-x-2'>
+                                                <Controller
+                                                    control={form.control}
+                                                    name={`conversations.${index}.sender`}
+                                                    render={({ field, fieldState }) => (
+                                                        <Field>
+                                                            <Select
+                                                                onValueChange={field.onChange}
+                                                                defaultValue={field.value}
+                                                            >
+                                                                <SelectTrigger>
+                                                                    <SelectValue placeholder="発言者" />
+                                                                </SelectTrigger>
+                                                                <SelectContent>
+                                                                    <SelectItem value="user">自分</SelectItem>
+                                                                    <SelectItem value="artist">推し</SelectItem>
+                                                                </SelectContent>
+                                                            </Select>
+                                                            {fieldState.invalid && (
+                                                                <FieldError errors={[fieldState.error]} />
+                                                            )}
+                                                        </Field>
+                                                    )}
+                                                />
+                                                <Controller
+                                                    control={form.control}
+                                                    name={`conversations.${index}.text`}
+                                                    render={({ field, fieldState }) => (
+                                                        <Field>
+                                                            <Input
+                                                                {...field}
+                                                                aria-invalid={fieldState.invalid}
+                                                                autoComplete='off'
+                                                            />
+                                                            {fieldState.invalid && (
+                                                                <FieldError errors={[fieldState.error]} />
+                                                            )}
+                                                        </Field>
+                                                    )}
+                                                />
+                                                <Button 
+                                                    variant={'ghost'} 
+                                                    onClick={() => remove(index)}
+                                                    disabled={fields.length === 1}
+                                                >
+                                                    <ClearIcon fontSize='small'/>
+                                                </Button>
+                                            </div>
+                                        ))}
+                                        {/*                                         <input className='border rounded-sm p-2 min-w-3xs' /> */}
+                                    </div>
+                                    <div 
+                                        className='flex-Center flex-col w-full border hover:cursor-pointer hover:bg-gray-100 rounded-sm' 
+                                        onClick={() => {
+                                            append({ text: '', sender: 'user'})
+                                        }}
+                                    >
+                                        <AddIcon fontSize='small' className='text-gray-600' />
+                                    </div>
                                 </div>
                             </div>
-                            <div className="grid gap-2 ">
-                                <Label htmlFor="conversations">会話レポ</Label>
-                                <div className='flex-Center w-full border hover:cursor-pointer hover:bg-gray-100 rounded-sm'>
-                                    <AddIcon fontSize='small' className='text-gray-600 '/>
-                                </div>
-                            </div>
-                        </div>
+                        </FieldGroup>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
+                                <Button variant="outline" onClick={() => form.reset()}>Cancel</Button>
                             </DialogClose>
-                            <Button type="submit">Save changes</Button>
+                            <Button type="submit" >Save changes</Button>
                         </DialogFooter>
-                    </DialogContent>
-                </form>
+                    </form>
+                </DialogContent>
             </Dialog>
-        </div>
+        </div >
     )
 }
 
