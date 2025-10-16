@@ -3,6 +3,18 @@
 import { prisma } from "@/lib/prisma"
 import { createClient } from "@/utils/supabase/server"
 import { revalidatePath } from "next/cache"
+import { cookies } from "next/headers"
+import z from "zod"
+
+const reportSchema = z.object({
+    part: z.string().min(1),
+    sheets: z.string().min(1),
+    repoType: z.string(),
+    artistName: z.string().min(1),
+    venue: z.string().min(1),
+    date: z.string().min(1, { message: '日付は必須です' }),
+    conversations: z.string()
+})
 
 // ログインしているauthorIdでEvent項目を追加
 export async function createEvent(formData: FormData) {
@@ -57,11 +69,59 @@ export async function getRepoData() {
 
     const allRepoDataList = await prisma.report.findMany({
         where: {
-            authodId: user.id
-        },
-        orderBy: {
-            date: 'asc'
+            authorId: user.id
         }
     })
     return allRepoDataList
+}
+
+export async function createReport(formData: FormData) {
+    try {
+        const supabase = createClient()
+        const { data: { user } } = await (await supabase).auth.getUser()
+
+        if (!user) {
+            throw new Error('ログインしてください');
+        }
+        //data check 
+        const parsedData = Object.fromEntries(formData.entries());
+        const validatedFields = reportSchema.safeParse(parsedData);
+
+        if (!validatedFields.success) {
+            return { errors: validatedFields.error.flatten().fieldErrors };
+        }
+
+        const {
+            part,
+            sheets,
+            repoType,
+            artistName,
+            date,
+            venue,
+            conversations,
+        } = validatedFields.data;
+
+        const conversationArray = JSON.parse(conversations);
+
+        await prisma.report.create({
+            data: {
+                artistName: artistName,
+                venue: venue,
+                repoType: repoType,
+                part: part,
+                sheets: sheets,
+                date: new Date(date),
+                conversations: conversationArray,
+                authorId: user.id,
+                tags: [],
+            }
+        })
+
+        revalidatePath('/repo')
+        console.log('保存成功')
+        return { success: true }
+    } catch (error) {
+        console.error('db保存エラー:', error)
+        return { success: false, message: '送信失敗' }
+    }
 }

@@ -24,6 +24,13 @@ import {
     FieldGroup,
     FieldLabel,
 } from "@/components/ui/field"
+import { Calendar } from "@/components/ui/calendar"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { CalendarIcon } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -32,6 +39,9 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useFieldArray, useForm } from "react-hook-form"
 import ClearIcon from '@mui/icons-material/Clear';
+import { cn } from '@/lib/utils'
+import { format } from "date-fns"
+import { createReport } from '@/app/action/action'
 
 const conversationSchema = z.object({
     sender: z.enum(['user', 'artist']),
@@ -39,11 +49,12 @@ const conversationSchema = z.object({
 })
 
 const formSchema = z.object({
-    artist_name: z.string().min(1),
+    artistName: z.string().min(1),
     venue: z.string().min(1),
     repoType: z.string(),
     part: z.string(),
     sheets: z.string(),
+    date: z.date(),
     conversations: z.array(conversationSchema).min(1, {
         message: '会話を一つ以上追加してください',
     }),
@@ -53,19 +64,20 @@ const AddRepoButton = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            artist_name: "",
+            artistName: "",
             venue: "",
             repoType: "",
             part: "",
             sheets: "",
-            conversations: [{ sender: 'user', text: ''}]
+            conversations: [{ sender: 'user', text: '' }]
         }
     })
     const { fields, append, remove } = useFieldArray({
         control: form.control,
         name: 'conversations'
     })
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+        const formData = new FormData()
         const conversationsWithOrder = data.conversations.map((conversation, index) => ({
             ...conversation,
             order: index + 1,
@@ -74,8 +86,16 @@ const AddRepoButton = () => {
             ...data,
             conversations: conversationsWithOrder
         }
-        console.log("FormData:", data)
-        console.log('FinalData:',finalData)
+
+        formData.append('artistName',finalData.artistName)
+        formData.append('venue',finalData.venue)
+        formData.append('repoType',finalData.repoType)
+        formData.append('part',finalData.part)
+        formData.append('sheets',finalData.sheets)
+        formData.append('date', finalData.date.toISOString())
+        formData.append('conversations', JSON.stringify(conversationsWithOrder))
+
+        await createReport(formData)
     }
 
     return (
@@ -85,7 +105,7 @@ const AddRepoButton = () => {
                     <Button variant="outline">レポ追加<AddIcon /></Button>
                 </DialogTrigger>
                 <DialogContent className="">
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} id="form-rhf-demo">
                         <DialogHeader>
                             <DialogTitle>レポ追加</DialogTitle>
                             <DialogDescription></DialogDescription>
@@ -95,7 +115,7 @@ const AddRepoButton = () => {
                                 <div className="grid gap-2">
                                     <Controller
                                         control={form.control}
-                                        name='artist_name'
+                                        name='artistName'
                                         render={({ field, fieldState }) => (
                                             <Field data-invalid={fieldState.invalid}>
                                                 <FieldLabel>アーティスト名</FieldLabel>
@@ -126,6 +146,46 @@ const AddRepoButton = () => {
                                                 {fieldState.invalid && (
                                                     <FieldError errors={[fieldState.error]} />
                                                 )}
+                                            </Field>
+                                        )}
+                                    />
+                                </div>
+                                <div className='grid gap-2'>
+                                    <Controller
+                                        control={form.control}
+                                        name="date"
+                                        render={({ field }) => (
+                                            <Field>
+                                                <FieldLabel>公演日</FieldLabel>
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <Button
+                                                            variant={"outline"}
+                                                            className={cn(
+                                                                "w-[240px] pl-3 text-left font-normal",
+                                                                !field.value && "text-muted-foreground"
+                                                            )}
+                                                        >
+                                                            {field.value ? (
+                                                                format(field.value, "PPP")
+                                                            ) : (
+                                                                <span>Pick a date</span>
+                                                            )}
+                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                        </Button>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-auto p-0" align="start">
+                                                        <Calendar
+                                                            mode="single"
+                                                            selected={field.value}
+                                                            onSelect={field.onChange}
+                                                            disabled={(date) =>
+                                                                date < new Date("1900-01-01")
+                                                            }
+                                                            captionLayout="dropdown"
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
                                             </Field>
                                         )}
                                     />
@@ -259,21 +319,21 @@ const AddRepoButton = () => {
                                                         </Field>
                                                     )}
                                                 />
-                                                <Button 
-                                                    variant={'ghost'} 
+                                                <Button
+                                                    variant={'ghost'}
                                                     onClick={() => remove(index)}
                                                     disabled={fields.length === 1}
                                                 >
-                                                    <ClearIcon fontSize='small'/>
+                                                    <ClearIcon fontSize='small' />
                                                 </Button>
                                             </div>
                                         ))}
                                         {/*                                         <input className='border rounded-sm p-2 min-w-3xs' /> */}
                                     </div>
-                                    <div 
-                                        className='flex-Center flex-col w-full border hover:cursor-pointer hover:bg-gray-100 rounded-sm' 
+                                    <div
+                                        className='flex-Center flex-col w-full border hover:cursor-pointer hover:bg-gray-100 rounded-sm'
                                         onClick={() => {
-                                            append({ text: '', sender: 'user'})
+                                            append({ text: '', sender: 'user' })
                                         }}
                                     >
                                         <AddIcon fontSize='small' className='text-gray-600' />
