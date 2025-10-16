@@ -41,10 +41,10 @@ model Event {
 
 model Report {
   id String @id @default(cuid())
-  author User @relation(fields: [authodId] , references: [id])
-  authodId String
-  part Int
-  sheets Int
+  author User @relation(fields: [authorId] , references: [id])
+  authorId String
+  part String
+  sheets String
   repoType String
   artistName String
   date DateTime
@@ -52,6 +52,6 @@ model Report {
   tags String[]
   conversations Json
   bookmark Boolean @default(false)
-  createdAt DateTime
-  updatedAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

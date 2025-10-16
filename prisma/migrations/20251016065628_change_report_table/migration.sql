@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "public"."Report" ALTER COLUMN "part" SET DATA TYPE TEXT,
+ALTER COLUMN "sheets" SET DATA TYPE TEXT;
