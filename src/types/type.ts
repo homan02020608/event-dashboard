@@ -19,4 +19,10 @@ export type EventFormData = {
     seat: string
 }
 
+export type Conversation = {
+  sender: 'user' | 'artist';
+  text: string;
+  order: number;
+};
+
 export type EventCardTypesSource = Partial<EventCardTypes>;
