@@ -3,7 +3,6 @@
 import { prisma } from "@/lib/prisma"
 import { createClient } from "@/utils/supabase/server"
 import { revalidatePath } from "next/cache"
-import { cookies } from "next/headers"
 import z from "zod"
 
 const reportSchema = z.object({
@@ -59,7 +58,7 @@ export async function getAllEventDataById() {
     return userEvent
 }
 
-export async function getRepoData() {
+export async function getRepoList() {
     const supabase = createClient()
     const { data: { user } } = await (await supabase).auth.getUser()
 
@@ -70,9 +69,35 @@ export async function getRepoData() {
     const allRepoDataList = await prisma.report.findMany({
         where: {
             authorId: user.id
+        },
+        select: {
+            id: true,
+            part: true,
+            sheets: true,
+            repoType: true,
+            artistName: true,
+            date: true
         }
     })
     return allRepoDataList
+}
+
+export async function getRepoDetails(repoId: string) {
+    try {
+        const repo = await prisma.report.findUnique({
+            where: {
+                id: repoId,
+            },
+            select: {
+                venue: true,
+                conversations: true
+            }
+        })
+        return repo
+    } catch (error) {
+        console.error('Server Action error:',error)
+        return null
+    }
 }
 
 export async function createReport(formData: FormData) {
