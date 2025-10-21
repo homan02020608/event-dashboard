@@ -61,6 +61,7 @@ const formSchema = z.object({
 })
 
 const AddRepoButton = () => {
+    const [isOpen, setIsOpen] = useState(false)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -95,12 +96,18 @@ const AddRepoButton = () => {
         formData.append('date', finalData.date.toISOString())
         formData.append('conversations', JSON.stringify(conversationsWithOrder))
 
-        await createReport(formData)
+        const result = await createReport(formData)
+        if(result.success) {
+            form.reset()
+            setIsOpen(false)
+        }else{
+            console.error('保存失敗：',result.errors)
+        }
     }
 
     return (
         <div className='w-full py-2'>
-            <Dialog>
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild>
                     <Button variant="outline">レポ追加<AddIcon /></Button>
                 </DialogTrigger>
