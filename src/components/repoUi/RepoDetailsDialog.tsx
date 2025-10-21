@@ -13,6 +13,8 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { getRepoDetails } from '@/app/action/action';
 import { Conversation } from '@/types/type';
 import MessageBubble from './MessageBubble';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import { Spinner } from '../ui/spinner';
 
 type RepoDetailsProps = {
     repoId: string
@@ -20,9 +22,10 @@ type RepoDetailsProps = {
     part: string
     sheets: string
     date: Date
+    venue: string
 }
 
-const RepoDetailsDialog = ({ repoId, artistName, part, sheets, date }: RepoDetailsProps) => {
+const RepoDetailsDialog = ({ repoId, artistName, part, sheets, date, venue }: RepoDetailsProps) => {
     const [isOpen, setIsOpen] = useState(false)
     const { data: repo, error, isLoading } = useSWR(
         isOpen ? ['repo', repoId] : null,
@@ -39,17 +42,21 @@ const RepoDetailsDialog = ({ repoId, artistName, part, sheets, date }: RepoDetai
             <DialogTrigger><KeyboardArrowRightIcon fontSize='large' /></DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{artistName}</DialogTitle>
+                    <DialogTitle>{artistName} {part}部</DialogTitle>
                     <DialogDescription></DialogDescription>
                 </DialogHeader>
-                {isLoading && <div>ローディング中...</div>}
+                {isLoading && <div className='flex-Center'><Spinner className='size-8'/></div>}
                 {/* レポ表示 */}
                 {repo &&
-                    <div>
-                        <div>{part}部{sheets}枚</div>
-                        <div>{date.toLocaleDateString()}</div>
+                    <div className='border-2 p-4 rounded-xl font-light text-sm'>
+                        <div className='flex justify-between border-b-2 pb-1'>
+                            <div>{date.toLocaleDateString()}</div>
+                            <div className='flex-End flex-col '>
+                                <div><ConfirmationNumberIcon className='text-red-400' /> {sheets}枚</div>
+                            </div>    
+                        </div>
                         {(repo.conversations as Conversation[]).map((conver) => (
-                            <div key={`${repoId}-${conver.order}-${conver.sender}`}>
+                            <div key={`${repoId}-${conver.order}-${conver.sender}`} className='my-2'>
                                 <MessageBubble
                                     sender={conver.sender}
                                     text={conver.text}

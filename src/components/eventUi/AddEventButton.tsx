@@ -68,7 +68,7 @@ const AddEventButton = () => {
         formData.append('seat', values.seat)
         formData.append('date', values.date.toISOString())
         formData.append('eventStartTime', values.eventStartTime)
-        console.log(values)
+        //console.log(values)
         await createEvent(formData) 
     }
     return (

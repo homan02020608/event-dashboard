@@ -76,7 +76,8 @@ export async function getRepoList() {
             sheets: true,
             repoType: true,
             artistName: true,
-            date: true
+            date: true,
+            venue: true
         }
     })
     return allRepoDataList
