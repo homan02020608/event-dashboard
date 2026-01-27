@@ -106,7 +106,7 @@ const AddRepoButton = () => {
     }
 
     return (
-        <div className='w-full py-2'>
+        <div className='py-2'>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild>
                     <Button variant="outline">レポ追加<AddIcon /></Button>
