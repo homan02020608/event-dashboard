@@ -42,6 +42,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { cn } from '@/lib/utils'
 import { format } from "date-fns"
 import { createReport } from '@/app/action/action'
+import { toast } from 'sonner'
 
 const conversationSchema = z.object({
     sender: z.enum(['user', 'artist']),
@@ -100,6 +101,7 @@ const AddRepoButton = () => {
         if(result.success) {
             form.reset()
             setIsOpen(false)
+            toast("追加成功しました", { position: 'bottom-center' })
         }else{
             console.error('保存失敗：',result.errors)
         }
