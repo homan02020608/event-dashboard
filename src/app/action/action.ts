@@ -96,7 +96,7 @@ export async function getRepoDetails(repoId: string) {
         })
         return repo
     } catch (error) {
-        console.error('Server Action error:',error)
+        console.error('Server Action error:', error)
         return null
     }
 }
@@ -149,5 +149,22 @@ export async function createReport(formData: FormData) {
     } catch (error) {
         console.error('db保存エラー:', error)
         return { success: false, message: '送信失敗' }
+    }
+}
+
+export async function deleteReport(reportIds: string[]) {
+    try {
+        await prisma.report.deleteMany({
+            where: {
+                id: {
+                    in: reportIds
+                },
+            },
+        });
+        revalidatePath('/repo')
+        return { success: true }
+    } catch (error) {
+        console.error('削除エラー:', error)
+        return { success: false, error: '削除失敗' };
     }
 }
