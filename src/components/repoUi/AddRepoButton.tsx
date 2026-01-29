@@ -43,6 +43,7 @@ import { cn } from '@/lib/utils'
 import { format } from "date-fns"
 import { createReport } from '@/app/action/action'
 import { toast } from 'sonner'
+import { Spinner } from '../ui/spinner'
 
 const conversationSchema = z.object({
     sender: z.enum(['user', 'artist']),
@@ -50,12 +51,24 @@ const conversationSchema = z.object({
 })
 
 const formSchema = z.object({
-    artistName: z.string().min(1),
-    venue: z.string().min(1),
-    repoType: z.string(),
-    part: z.string(),
-    sheets: z.string(),
-    date: z.date(),
+    artistName: z.string().min(1, {
+        message: 'アーティスト名は必須です'
+    }),
+    venue: z.string().min(1, {
+        message: '会場名は必須です'
+    }),
+    repoType: z.string().min(1, {
+        message: 'レポ種類は必須です'
+    }),
+    part: z.string().min(1, {
+        message: '部数は必須です'
+    }),
+    sheets: z.string().min(1, {
+        message: '枚数は必須です'
+    }),
+    date: z.date({
+        error: "公演日を選択してください",
+    }),
     conversations: z.array(conversationSchema).min(1, {
         message: '会話を一つ以上追加してください',
     }),
@@ -89,23 +102,24 @@ const AddRepoButton = () => {
             conversations: conversationsWithOrder
         }
 
-        formData.append('artistName',finalData.artistName)
-        formData.append('venue',finalData.venue)
-        formData.append('repoType',finalData.repoType)
-        formData.append('part',finalData.part)
-        formData.append('sheets',finalData.sheets)
+        formData.append('artistName', finalData.artistName)
+        formData.append('venue', finalData.venue)
+        formData.append('repoType', finalData.repoType)
+        formData.append('part', finalData.part)
+        formData.append('sheets', finalData.sheets)
         formData.append('date', finalData.date.toISOString())
         formData.append('conversations', JSON.stringify(conversationsWithOrder))
 
         const result = await createReport(formData)
-        if(result.success) {
+        if (result.success) {
             form.reset()
             setIsOpen(false)
             toast("追加成功しました", { position: 'bottom-center' })
-        }else{
-            console.error('保存失敗：',result.errors)
+        } else {
+            console.error('保存失敗：', result.errors)
         }
     }
+    const { isSubmitting } = form.formState
 
     return (
         <div className='py-2'>
@@ -163,7 +177,7 @@ const AddRepoButton = () => {
                                     <Controller
                                         control={form.control}
                                         name="date"
-                                        render={({ field }) => (
+                                        render={({ field, fieldState }) => (
                                             <Field>
                                                 <FieldLabel>公演日</FieldLabel>
                                                 <Popover>
@@ -195,16 +209,19 @@ const AddRepoButton = () => {
                                                         />
                                                     </PopoverContent>
                                                 </Popover>
+                                                {fieldState.invalid && (
+                                                    <FieldError errors={[fieldState.error]} />
+                                                )}
                                             </Field>
                                         )}
                                     />
                                 </div>
                                 <div className='flex-Center gap-4'>
-                                    <div className="grid gap-2 w-full ">
+                                    <div className="grid gap-2 w-full relative pb-6">
                                         <Controller
                                             control={form.control}
                                             name='repoType'
-                                            render={({ field }) => (
+                                            render={({ field, fieldState }) => (
                                                 <Field>
                                                     <FieldLabel>レポ種類</FieldLabel>
                                                     <Select
@@ -221,15 +238,18 @@ const AddRepoButton = () => {
                                                             <SelectItem value="real_sign">リアルサイン会</SelectItem>
                                                         </SelectContent>
                                                     </Select>
+                                                    {fieldState.invalid && (
+                                                        <FieldError errors={[fieldState.error]} className='absolute -bottom-1 left-0 text-xs' />
+                                                    )}
                                                 </Field>
                                             )}
                                         />
                                     </div>
-                                    <div className="grid gap-2 w-full ">
+                                    <div className="grid gap-2 w-full relative pb-6">
                                         <Controller
                                             control={form.control}
                                             name='part'
-                                            render={({ field }) => (
+                                            render={({ field, fieldState }) => (
                                                 <Field>
                                                     <FieldLabel>部数</FieldLabel>
                                                     <Select
@@ -248,15 +268,18 @@ const AddRepoButton = () => {
                                                             <SelectItem value="6">第6部</SelectItem>
                                                         </SelectContent>
                                                     </Select>
+                                                    {fieldState.invalid && (
+                                                        <FieldError errors={[fieldState.error]} className='absolute -bottom-1 left-0 text-xs' />
+                                                    )}
                                                 </Field>
                                             )}
                                         />
                                     </div>
-                                    <div className="grid gap-2 w-full ">
+                                    <div className="grid gap-2 w-full relative pb-6">
                                         <Controller
                                             control={form.control}
                                             name='sheets'
-                                            render={({ field }) => (
+                                            render={({ field, fieldState }) => (
                                                 <Field>
                                                     <FieldLabel>枚数</FieldLabel>
                                                     <Select
@@ -279,6 +302,9 @@ const AddRepoButton = () => {
                                                             <SelectItem value="10">10</SelectItem>
                                                         </SelectContent>
                                                     </Select>
+                                                    {fieldState.invalid && (
+                                                        <FieldError errors={[fieldState.error]} className='absolute -bottom-1 left-0 text-xs' />
+                                                    )}
                                                 </Field>
                                             )}
                                         />
@@ -352,9 +378,20 @@ const AddRepoButton = () => {
                         </FieldGroup>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button variant="outline" onClick={() => form.reset()}>Cancel</Button>
+                                <Button 
+                                    variant="outline" 
+                                    onClick={() => form.reset()}
+                                    disabled={isSubmitting}
+                                >
+                                    キャンセル
+                                </Button>
                             </DialogClose>
-                            <Button type="submit" >Save changes</Button>
+                            <Button 
+                                type="submit"
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? <Spinner/> : '追加'}
+                            </Button>
                         </DialogFooter>
                     </form>
                 </DialogContent>
