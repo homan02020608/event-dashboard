@@ -6,52 +6,67 @@
 
 generator client {
   provider = "prisma-client-js"
+  //provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  //url       = env("DATABASE_URL")
+  //directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id String @id 
-  email String 
-  name String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  event Event[]
-  report Report[]
+  id        String     @id
+  email     String
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  event     Event[]
+  report    Report[]
+  bookmarks Bookmark[]
 }
 
 model Event {
-  id String @id @default(cuid())
-  author User @relation(fields: [authorId] , references: [id])
-  authorId String
-  title String
-  date DateTime
-  region String
-  venue String
-  seat String
+  id             String   @id @default(cuid())
+  author         User     @relation(fields: [authorId], references: [id])
+  authorId       String
+  title          String
+  date           DateTime
+  region         String
+  venue          String
+  seat           String
   eventStartTime String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Report {
-  id String @id @default(cuid())
-  author User @relation(fields: [authorId] , references: [id])
-  authorId String
-  part String
-  sheets String
-  repoType String
-  artistName String
-  date DateTime
-  venue String
-  tags String[]
+  id            String     @id @default(cuid())
+  author        User       @relation(fields: [authorId], references: [id])
+  authorId      String
+  part          String
+  sheets        String
+  repoType      String
+  artistName    String
+  date          DateTime
+  venue         String
+  tags          String[]
   conversations Json
-  bookmark Boolean @default(false)
+  bookmarks     Bookmark[]
+  isPublic      Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  repoId    String
+  report    Report   @relation(fields: [repoId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updateAt  DateTime @updatedAt
+
+  @@unique([userId, repoId])
 }
