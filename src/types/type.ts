@@ -27,6 +27,8 @@ export type RepoDataTypes = {
   sheets: string;
   repoType: string;
   artistName: string;
+  isPublic: boolean
+  isBookmarked: boolean;
 }
 
 export type Conversation = {

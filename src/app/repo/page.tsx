@@ -1,9 +1,10 @@
 import React from 'react'
-import { getRepoList } from '../action/action';
+import { getRepoData } from '../action/action';
 import RepoList from '@/components/repoUi/RepoList';
 
 const page = async () => {
-    const repoData = await getRepoList()
+    //const repoData = await getRepoList()
+    const repoData = await getRepoData()
 
     return (
         <div className='flex-Center flex-col m-4 p-2 bg-white shadow-xl'>

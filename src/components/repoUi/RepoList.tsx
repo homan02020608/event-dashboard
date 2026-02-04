@@ -86,6 +86,8 @@ const RepoList = ({ repoData }: { repoData: RepoDataTypes[] }) => {
                             sheets={repo.sheets}
                             repoType={repo.repoType}
                             artistName={repo.artistName}
+                            isPublic={repo.isPublic}
+                            isBookmarked={repo.isBookmarked}
                             isSelected={selectedRepoId.has(repo.id)}
                             isEditMode={isEditMode}
                             onToggle={() => selectCheckBox(repo.id)}
