@@ -58,7 +58,7 @@ export async function getAllEventDataById() {
     return userEvent
 }
 
-export async function getRepoList() {
+/* export async function getRepoList() {
     const supabase = createClient()
     const { data: { user } } = await (await supabase).auth.getUser()
 
@@ -78,9 +78,49 @@ export async function getRepoList() {
             artistName: true,
             date: true,
             venue: true
-        }
+        },
+
     })
     return allRepoDataList
+} */
+export async function getRepoData() {
+    const supabase = createClient()
+    const { data: { user } } = await (await supabase).auth.getUser()
+
+    if (!user) {
+        throw new Error('ログインしてください')
+    }
+
+    const reports = await prisma.report.findMany({
+        where: {
+            authorId: user.id
+        },
+        select: {
+            id: true,
+            part: true,
+            sheets: true,
+            repoType: true,
+            artistName: true,
+            date: true,
+            venue: true,
+            isPublic: true,
+            bookmarks: {
+                where: {
+                    userId: user.id
+                },
+                select: {
+                    id: true
+                }
+            }
+        },
+        orderBy: { date: 'desc' }
+    })
+
+    const reportsWithStatus = reports.map((repo) => ({
+        ...repo,
+        isBookmarked: repo.bookmarks.length > 0
+    }))
+    return reportsWithStatus
 }
 
 export async function getRepoDetails(repoId: string) {
