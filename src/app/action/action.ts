@@ -208,3 +208,41 @@ export async function deleteReport(reportIds: string[]) {
         return { success: false, error: '削除失敗' };
     }
 }
+
+export async function bookmarkReport(reportId: string) {
+    const supabase = createClient()
+    const { data: { user } } = await (await supabase).auth.getUser()
+
+    if (!user) {
+        throw new Error('ログインしてください');
+    }
+
+    try {
+        const isBookmarkExisting = await prisma.bookmark.findUnique({
+            where: {
+                userId_repoId: {
+                    userId: user.id,
+                    repoId: reportId,
+                },
+            }
+        });
+
+        if (isBookmarkExisting) {
+            await prisma.bookmark.delete({
+                where: { id: isBookmarkExisting.id }
+            });
+        } else {
+            await prisma.bookmark.create({
+                data: {
+                    userId: user.id,
+                    repoId: reportId,
+                }
+            })
+        }
+
+        revalidatePath('/repo')
+        return { success: true }
+    } catch (error) {
+        return { success: false }
+    }
+}
