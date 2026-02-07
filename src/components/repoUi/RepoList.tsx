@@ -9,6 +9,8 @@ import RepoCard from './RepoCard';
 import { deleteReport } from '@/app/action/action';
 import { toast } from 'sonner';
 import DeleteConfirmAlertDialog from './DeleteConfirmAlertDialog';
+import SortDropdownMenu from './SortDropdownMenu';
+import FilterSheetMenu from './FilterSheetMenu';
 
 const RepoList = ({ repoData }: { repoData: RepoDataTypes[] }) => {
     const [isEditMode, setIsEditMode] = useState(false);
@@ -50,31 +52,38 @@ const RepoList = ({ repoData }: { repoData: RepoDataTypes[] }) => {
 
     return (
         <div>
-            <div className='flex-Start flex-row gap-2 '>
-                <AddRepoButton />
-                {isEditMode ?
-                    <>
-                        <Button
-                            variant="outline"
-                            disabled={selectedRepoId.size === 0}
-                            onClick={() => setShowConfirmAlert(true)}
-                        >
-                            削除
-                            <DeleteIcon />
-                        </Button>
-                        <Button 
-                            variant="outline" 
-                            onClick={exitEditMode}
-                        >
-                            キャンセル
-                        </Button>
-                    </>
-                    :
-                    <>
-                        <Button variant="outline" onClick={() => setIsEditMode(true)}>編集<ModeEditIcon /></Button>
-                    </>
-                }
+            <div className='flex-Between flex-row gap-2 overflow-auto'>
+                <div className='flex-Center gap-2 '>
+                    <AddRepoButton />
+                    {isEditMode ?
+                        <>
+                            <Button
+                                variant="outline"
+                                disabled={selectedRepoId.size === 0}
+                                onClick={() => setShowConfirmAlert(true)}
+                            >
+                                削除
+                                <DeleteIcon />
+                            </Button>
+                            <Button
+                                variant="outline"
+                                onClick={exitEditMode}
+                            >
+                                キャンセル
+                            </Button>
+                        </>
+                        :
+                        <>
+                            <Button variant="outline" onClick={() => setIsEditMode(true)}>編集<ModeEditIcon /></Button>
+                        </>
+                    }
+                </div>
+                <div className='flex-Center gap-2'>
+                   <SortDropdownMenu/>
+                   <FilterSheetMenu/>
+                </div>
             </div>
+
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 border p-2 '>
                 {repoData.map((repo) => (
                     <div key={repo.id}>
