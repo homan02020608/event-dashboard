@@ -83,13 +83,15 @@ export async function getAllEventDataById() {
     })
     return allRepoDataList
 } */
-export async function getRepoData() {
+export async function getRepoData(sortValue: string) {
     const supabase = createClient()
     const { data: { user } } = await (await supabase).auth.getUser()
 
     if (!user) {
         throw new Error('ログインしてください')
     }
+
+    const [field, order] = sortValue.split('_') as [string, 'asc' | 'desc'];
 
     const reports = await prisma.report.findMany({
         where: {
@@ -113,7 +115,9 @@ export async function getRepoData() {
                 }
             }
         },
-        orderBy: { date: 'desc' }
+        orderBy: { 
+            [field]:order
+         }
     })
 
     const reportsWithStatus = reports.map((repo) => ({
