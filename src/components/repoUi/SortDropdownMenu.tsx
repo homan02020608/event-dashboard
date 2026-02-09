@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useTransition } from 'react'
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -16,7 +16,11 @@ const sort_options = [
     { label: '古い順', value: 'date_asc' },
 ]
 
-const SortDropdownMenu = () => {
+type Props = {
+    startTransition: React.TransitionStartFunction;
+}
+
+const SortDropdownMenu = ({ startTransition }: Props) => {
     const pathname = usePathname()
     const searchParams = useSearchParams()
     const router = useRouter()
@@ -27,7 +31,10 @@ const SortDropdownMenu = () => {
     const handleSort = (value: string) => {
         const params = new URLSearchParams(searchParams);
         params.set('sort', value);
-        router.push(`${pathname}?${params.toString()}`, { scroll: false })
+
+        startTransition(() => {
+            router.push(`${pathname}?${params.toString()}`, { scroll: false })
+        })
     }
 
     return (

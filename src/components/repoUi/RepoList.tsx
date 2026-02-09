@@ -1,6 +1,6 @@
 "use client"
 import { RepoDataTypes } from '@/types/type'
-import React, { useState } from 'react'
+import React, { useState, useTransition } from 'react'
 import AddRepoButton from './AddRepoButton';
 import { Button } from '../ui/button';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
@@ -11,11 +11,13 @@ import { toast } from 'sonner';
 import DeleteConfirmAlertDialog from './DeleteConfirmAlertDialog';
 import SortDropdownMenu from './SortDropdownMenu';
 import FilterSheetMenu from './FilterSheetMenu';
+import { Spinner } from '../ui/spinner';
 
 const RepoList = ({ repoData }: { repoData: RepoDataTypes[] }) => {
     const [isEditMode, setIsEditMode] = useState(false);
     const [selectedRepoId, setSelectedRepoId] = useState<Set<string>>(new Set());
     const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+    const [isPending, startTransition] = useTransition();
 
     //checkBoxのtrue/false判定
     const selectCheckBox = (id: string) => {
@@ -79,31 +81,39 @@ const RepoList = ({ repoData }: { repoData: RepoDataTypes[] }) => {
                     }
                 </div>
                 <div className='flex-Center gap-2'>
-                   <SortDropdownMenu/>
-                   <FilterSheetMenu/>
+                    <SortDropdownMenu
+                        startTransition={startTransition}
+                    />
+                    <FilterSheetMenu />
                 </div>
             </div>
+            {isPending ?
+                (<div className='flex-Center '>
+                    <Spinner className='size-8'/>
+                </div>)
+                :
+                (<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 border p-2 '>
+                    {repoData.map((repo) => (
+                        <div key={repo.id}>
+                            <RepoCard
+                                id={repo.id}
+                                date={repo.date}
+                                venue={repo.venue}
+                                part={repo.part}
+                                sheets={repo.sheets}
+                                repoType={repo.repoType}
+                                artistName={repo.artistName}
+                                isPublic={repo.isPublic}
+                                isBookmarked={repo.isBookmarked}
+                                isSelected={selectedRepoId.has(repo.id)}
+                                isEditMode={isEditMode}
+                                onToggle={() => selectCheckBox(repo.id)}
+                            />
+                        </div>
+                    ))}
+                </div>)
+            }
 
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 border p-2 '>
-                {repoData.map((repo) => (
-                    <div key={repo.id}>
-                        <RepoCard
-                            id={repo.id}
-                            date={repo.date}
-                            venue={repo.venue}
-                            part={repo.part}
-                            sheets={repo.sheets}
-                            repoType={repo.repoType}
-                            artistName={repo.artistName}
-                            isPublic={repo.isPublic}
-                            isBookmarked={repo.isBookmarked}
-                            isSelected={selectedRepoId.has(repo.id)}
-                            isEditMode={isEditMode}
-                            onToggle={() => selectCheckBox(repo.id)}
-                        />
-                    </div>
-                ))}
-            </div>
             {/* 削除確認AlertDialog */}
             <DeleteConfirmAlertDialog
                 open={showConfirmAlert}
