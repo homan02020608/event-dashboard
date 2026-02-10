@@ -1,9 +1,7 @@
 import { RepoDataTypes } from '@/types/type'
 import React from 'react'
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import RepoDetailsDialog from './RepoDetailsDialog';
 import { Checkbox } from '../ui/checkbox';
-import { Button } from '../ui/button';
 import BookmarkButton from './BookmarkButton';
 
 interface RepoCardProps extends RepoDataTypes {

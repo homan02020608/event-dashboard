@@ -84,7 +84,9 @@ const RepoList = ({ repoData }: { repoData: RepoDataTypes[] }) => {
                     <SortDropdownMenu
                         startTransition={startTransition}
                     />
-                    <FilterSheetMenu />
+                    <FilterSheetMenu 
+                        startTransition={startTransition}
+                    />
                 </div>
             </div>
             {isPending ?
