@@ -4,10 +4,8 @@ import RepoList from '@/components/repoUi/RepoList';
 import { GetRepoParams } from '@/types/type';
 
 const page = async ({ searchParams }: { searchParams: GetRepoParams }) => {
-    //const repoData = await getRepoList()
     const { sort, repoType, artistName, isPublic } = await searchParams
     const sortValue = sort || 'date_desc'
-    //const sortValue = searchParams.sort || 'date_desc';
     const repoData = await getRepoData({
         sort: sortValue,
         repoType: repoType,

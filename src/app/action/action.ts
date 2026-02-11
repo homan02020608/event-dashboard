@@ -60,31 +60,6 @@ export async function getAllEventDataById() {
     return userEvent
 }
 
-/* export async function getRepoList() {
-    const supabase = createClient()
-    const { data: { user } } = await (await supabase).auth.getUser()
-
-    if (!user) {
-        throw new Error('ログインしてください')
-    }
-
-    const allRepoDataList = await prisma.report.findMany({
-        where: {
-            authorId: user.id
-        },
-        select: {
-            id: true,
-            part: true,
-            sheets: true,
-            repoType: true,
-            artistName: true,
-            date: true,
-            venue: true
-        },
-
-    })
-    return allRepoDataList
-} */
 export async function getRepoData({ sort, repoType, artistName, isPublic }: GetRepoParams) {
     const supabase = createClient()
     const { data: { user } } = await (await supabase).auth.getUser()
@@ -92,24 +67,28 @@ export async function getRepoData({ sort, repoType, artistName, isPublic }: GetR
     if (!user) {
         throw new Error('ログインしてください')
     }
-
+    //初期値はログインしているuserIdのみ該当のrepo取得
     const where: Prisma.ReportWhereInput = {
         authorId: user.id
     }
 
+    // url queryに存在する項目のみ絞り込み
     if (repoType) {
         where.repoType = {
             in: repoType.split(',').filter(Boolean)
         }
     }
+
     if (artistName) {
         where.artistName = {
             in: artistName.split(',').filter(Boolean)
         }
     }
+
     if (isPublic) {
         const isPublicParams = isPublic.split(',').filter(Boolean)
         
+        //「公開」と「非公開」どちらか片方だけの場合のみ絞り込み
         if(isPublicParams.includes('true') && !isPublicParams.includes('false')){
             where.isPublic = true;
         } else if (isPublicParams.includes('false') && !isPublicParams.includes('true')){
@@ -118,7 +97,8 @@ export async function getRepoData({ sort, repoType, artistName, isPublic }: GetR
     }
 
     const [field, order] = sort?.split('_') as [string, 'asc' | 'desc'];
-
+    
+    //セキュリティ対策としてsort許可リスト作成
     const validSortFields = ['date', 'createdAt', 'updatedAt'];
     const safeField = validSortFields.includes(field) ? field : 'date';
 
