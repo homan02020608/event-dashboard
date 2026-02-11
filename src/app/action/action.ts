@@ -1,6 +1,8 @@
 'use server'
 
+import { Prisma } from "@/generated/prisma/client"
 import { prisma } from "@/lib/prisma"
+import { GetRepoParams } from "@/types/type"
 import { createClient } from "@/utils/supabase/server"
 import { revalidatePath } from "next/cache"
 import z from "zod"
@@ -83,7 +85,7 @@ export async function getAllEventDataById() {
     })
     return allRepoDataList
 } */
-export async function getRepoData(sortValue: string) {
+export async function getRepoData({ sort, repoType, artistName, isPublic }: GetRepoParams) {
     const supabase = createClient()
     const { data: { user } } = await (await supabase).auth.getUser()
 
@@ -91,12 +93,37 @@ export async function getRepoData(sortValue: string) {
         throw new Error('ログインしてください')
     }
 
-    const [field, order] = sortValue.split('_') as [string, 'asc' | 'desc'];
+    const where: Prisma.ReportWhereInput = {
+        authorId: user.id
+    }
+
+    if (repoType) {
+        where.repoType = {
+            in: repoType.split(',').filter(Boolean)
+        }
+    }
+    if (artistName) {
+        where.artistName = {
+            in: artistName.split(',').filter(Boolean)
+        }
+    }
+    if (isPublic) {
+        const isPublicParams = isPublic.split(',').filter(Boolean)
+        
+        if(isPublicParams.includes('true') && !isPublicParams.includes('false')){
+            where.isPublic = true;
+        } else if (isPublicParams.includes('false') && !isPublicParams.includes('true')){
+            where.isPublic = false;
+        }
+    }
+
+    const [field, order] = sort?.split('_') as [string, 'asc' | 'desc'];
+
+    const validSortFields = ['date', 'createdAt', 'updatedAt'];
+    const safeField = validSortFields.includes(field) ? field : 'date';
 
     const reports = await prisma.report.findMany({
-        where: {
-            authorId: user.id
-        },
+        where,
         select: {
             id: true,
             part: true,
@@ -115,9 +142,9 @@ export async function getRepoData(sortValue: string) {
                 }
             }
         },
-        orderBy: { 
-            [field]:order
-         }
+        orderBy: {
+            [safeField]: order
+        }
     })
 
     const reportsWithStatus = reports.map((repo) => ({

@@ -37,4 +37,11 @@ export type Conversation = {
   order: number;
 };
 
+export type GetRepoParams = {
+  sort?: string
+  repoType?: string
+  artistName?: string
+  isPublic?: string
+}
+
 export type EventCardTypesSource = Partial<EventCardTypes>;

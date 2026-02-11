@@ -32,10 +32,18 @@ const FILTER_COLUMN = [
     key: 'repoType',
     title: 'レポ種類',
     options: [
-      { label: 'online_meet', value: 'online_meet' },
+      { label: 'online_meeting', value: 'online_meeting' },
       { label: 'online_sign', value: 'online_sign' },
-      { label: 'real_meet', value: 'real_meet' },
+      { label: 'real_meeting', value: 'real_meeting' },
       { label: 'real_sign', value: 'real_sign' },
+    ]
+  },
+  {
+    key: 'isPublic',
+    title: '公開',
+    options: [
+      {label: '公開中', value: 'true'},
+      {label: '非公開', value: 'false'},
     ]
   }
 ]
@@ -63,7 +71,9 @@ const FilterSheetMenu = ({ startTransition }: Props) => {
     } else {
       params.delete(key)
     }
-
+    /*  startTransition(() => {
+       router.push(`${pathname}?${params.toString()}`, { scroll: false })
+     }) */
     router.push(`${pathname}?${params.toString()}`, { scroll: false })
   }
 
