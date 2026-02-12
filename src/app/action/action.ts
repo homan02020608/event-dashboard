@@ -17,7 +17,7 @@ const reportSchema = z.object({
     conversations: z.string()
 })
 
-// ログインしているauthorIdでEvent項目を追加
+// ログインしているauthorIdでEvent項目を追加 
 export async function createEvent(formData: FormData) {
     const supabase = createClient()
     const { data: { user } } = await (await supabase).auth.getUser()

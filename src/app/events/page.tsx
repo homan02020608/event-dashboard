@@ -1,9 +1,11 @@
 import AddEventButton from '@/components/eventUi/AddEventButton'
 import EventCard from '@/components/eventUi/EventCard'
-import { prisma } from '@/lib/prisma'
 import { EventCardTypesSource } from '@/types/type'
 import React from 'react'
-import { getAllEventDataById } from '../action/action'
+import { getAllEventDataById } from './data'
+
+
+
 
 const page = async () => {
   const events = await getAllEventDataById()

@@ -10,11 +10,12 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { getRepoDetails } from '@/app/action/action';
 import { Conversation } from '@/types/type';
 import MessageBubble from './MessageBubble';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { Spinner } from '../ui/spinner';
+//import { getRepoDetails } from '@/app/action/action';
+import { getRepoDetails } from '@/app/repo/action';
 
 type RepoDetailsProps = {
     repoId: string
@@ -36,7 +37,7 @@ const RepoDetailsDialog = ({ repoId, artistName, part, sheets, date, venue }: Re
             revalidateIfStale: false
         }
     )
-    //console.log('Repo:', repo)
+
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger><KeyboardArrowRightIcon fontSize='large' /></DialogTrigger>

@@ -3,7 +3,9 @@ import React, { startTransition, useOptimistic, useState } from 'react'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { Button } from '../ui/button';
-import { bookmarkReport } from '@/app/action/action';
+import { bookmarkReport } from '@/app/repo/action';
+
+
 
 type BookmarkProps = {
     repoId: string

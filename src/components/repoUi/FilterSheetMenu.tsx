@@ -20,7 +20,6 @@ import { Button } from '../ui/button'
 import TuneIcon from '@mui/icons-material/Tune';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Label } from '../ui/label';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Checkbox } from '../ui/checkbox'
 
 type Props = {

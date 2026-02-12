@@ -1,7 +1,7 @@
 import React from 'react'
-import { getRepoData } from '../action/action';
 import RepoList from '@/components/repoUi/RepoList';
 import { GetRepoParams } from '@/types/type';
+import { getRepoData } from './data';
 
 const page = async ({ searchParams }: { searchParams: GetRepoParams }) => {
     const { sort, repoType, artistName, isPublic } = await searchParams

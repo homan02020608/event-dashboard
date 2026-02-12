@@ -1,7 +1,8 @@
 import ChartSession from "@/components/chart/ChartSession";
 import { EventTable } from "@/components/EventTable";
 import HomePageInfoCardList from "@/components/HomePageInfoCardList";
-import { getAllEventDataById } from "./action/action";
+import { getAllEventDataById } from "./events/data";
+
 
 export default async function Home() {
   const eventData = await getAllEventDataById()
