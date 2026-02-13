@@ -25,3 +25,20 @@ export async function createEvent(formData: FormData) {
     })
     revalidatePath('/events')
 }
+
+export async function deleteEvents(eventIds: string[]) {
+    try {
+        await prisma.event.deleteMany({
+            where: {
+                id: {
+                    in: eventIds
+                }
+            }
+        });
+        revalidatePath('/events')
+        return { success: true }
+    } catch (error) {
+        console.error('削除エラー:', error)
+        return { success: false, error: '削除失敗' };
+    }
+}
