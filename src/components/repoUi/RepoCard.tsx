@@ -26,6 +26,7 @@ const RepoCard = ({ id, artistName, part, sheets, date, venue, repoType, isSelec
                 <BookmarkButton
                     repoId={id}
                     initialIsBookmarked={isBookmarked}
+                    isEditMode={isEditMode}
                 />
 
             </div>

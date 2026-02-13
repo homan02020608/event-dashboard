@@ -10,9 +10,10 @@ import { bookmarkReport } from '@/app/repo/action';
 type BookmarkProps = {
     repoId: string
     initialIsBookmarked: boolean
+    isEditMode: boolean
 }
 
-const BookmarkButton = ({ repoId, initialIsBookmarked }: BookmarkProps) => {
+const BookmarkButton = ({ repoId, initialIsBookmarked, isEditMode }: BookmarkProps) => {
     //const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
     const [isBookmarked, setOptimisticBookmark] = useOptimistic(
         initialIsBookmarked,
@@ -33,6 +34,7 @@ const BookmarkButton = ({ repoId, initialIsBookmarked }: BookmarkProps) => {
             variant={'ghost'}
             className='transition-transform duration-300'
             onClick={handleBookmark}
+            disabled={isEditMode}
         >
             {isBookmarked ? <BookmarkIcon/> : <BookmarkBorderIcon/>}
         </Button>
