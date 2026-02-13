@@ -76,8 +76,8 @@ const AddEventButton = () => {
     }
     return (
         <Sheet>
-            <SheetTrigger asChild className='mx-4'>
-                <Button variant={'outline'}>Add Event</Button>
+            <SheetTrigger asChild className=''>
+                <Button variant={'outline'}>イベント追加</Button>
             </SheetTrigger>
             <SheetContent>
                 <SheetHeader>
