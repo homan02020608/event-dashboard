@@ -10,22 +10,17 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { DeleteConfirmAlertProps } from '@/types/type'
 
-type DeleteConfirmAlertProps = {
-    open: boolean;
-    onOpenChange: (open: boolean) => void
-    onConfirmDelete: () => void
-    count: number
-}
 
-const DeleteConfirmAlertDialog = ({ open, onOpenChange, onConfirmDelete, count }: DeleteConfirmAlertProps) => {
+const DeleteConfirmAlertDialog = ({ open, onOpenChange, onConfirmDelete, count, title }: DeleteConfirmAlertProps ) => {
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>本当に削除しますか？</AlertDialogTitle>
                     <AlertDialogDescription>
-                        選択された{count}件のレポートを削除します。<br/>
+                        選択された{count}件の{title}を削除します。<br/>
                         この操作は取り消せません。
                     </AlertDialogDescription>
                 </AlertDialogHeader>
