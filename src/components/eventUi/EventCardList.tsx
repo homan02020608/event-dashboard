@@ -9,10 +9,12 @@ import { Checkbox } from '../ui/checkbox'
 import { EventCardTypes } from '@/types/type'
 import { deleteEvents } from '@/app/events/action'
 import { toast } from 'sonner'
+import DeleteConfirmAlertDialog from '../repoUi/DeleteConfirmAlertDialog'
 
 const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
     const [selectedEventId, setSelectedEventId] = useState<Set<string>>(new Set());
+    const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false)
     const [isPending, startTransition] = useTransition();
 
     const selectCheckBox = (id: string) => {
@@ -36,6 +38,7 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
         const result = await deleteEvents(Array.from(selectedEventId))
 
         if (result.success) {
+            setShowConfirmAlert(false)
             toast("削除成功しました", { position: 'bottom-center' })
             setIsEditMode(false)
             setSelectedEventId(new Set());
@@ -54,7 +57,7 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
                             <Button
                                 variant="outline"
                                 disabled={selectedEventId.size === 0}
-                                onClick={handleDelete}
+                                onClick={() => setShowConfirmAlert(true)}
                             >
                                 削除
                                 <DeleteIcon />
@@ -77,8 +80,9 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
                 {eventData.map((event) => (
                     <div key={event.id} className='static flex flex-col my-4 bg-white rounded-xl text-black shadow-md '>
                         <Checkbox
-                            className={`absolute ${isEditMode ? 'visible' : 'invisible'}`}
+                            className={`absolute ${isEditMode ? 'visible' : 'invisible'} `}
                             onClick={() => selectCheckBox(event.id)}
+                            checked={selectedEventId.has(event.id)}
                         />
                         <div className='w-full'>
                             <EventCard
@@ -87,12 +91,22 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
                                 venue={event.venue}
                                 seat={event.seat}
                                 eventStartTime={event.eventStartTime}
+                                isSelected={selectedEventId.has(event.id)}
+                                isEditMode={isEditMode}
+                                onToggle={() => selectCheckBox(event.id)}
                             />
                         </div>
-
                     </div>
                 ))}
             </div>
+
+            <DeleteConfirmAlertDialog
+                open={showConfirmAlert}
+                onOpenChange={setShowConfirmAlert}
+                onConfirmDelete={handleDelete}
+                count={selectedEventId.size}
+                title={`イベント`}
+            />
         </div>
 
     )

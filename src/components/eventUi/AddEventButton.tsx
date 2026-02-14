@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import {
     Sheet,
     SheetClose,
@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -32,7 +31,10 @@ import {
 import { CalendarIcon } from 'lucide-react'
 import { format } from "date-fns"
 import { cn } from '@/lib/utils'
-import { createEvent } from '@/app/action/action'
+
+import { Spinner } from '../ui/spinner'
+import { createEvent } from '@/app/events/action'
+import { toast } from 'sonner'
 
 
 
@@ -50,6 +52,7 @@ const formSchema = z.object({
 })
 
 const AddEventButton = () => {
+    const [isOpen, setIsOpen] = useState<boolean>(false)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -72,10 +75,20 @@ const AddEventButton = () => {
         formData.append('date', values.date.toISOString())
         formData.append('eventStartTime', values.eventStartTime)
         //console.log(values)
-        await createEvent(formData) 
+        const result = await createEvent(formData)
+
+        if (result.success){
+            form.reset()
+            setIsOpen(false)
+            toast("追加成功しました", { position: 'bottom-center' })
+        } else {
+            console.error('保存失敗：', result.message)
+        }
     }
+
+    const { isSubmitting } = form.formState
     return (
-        <Sheet>
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild className=''>
                 <Button variant={'outline'}>イベント追加</Button>
             </SheetTrigger>
@@ -187,7 +200,7 @@ const AddEventButton = () => {
                                         <Input
                                             type='time'
                                             id='time-picker'
-                                            className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none" 
+                                            className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                                             {...field}
                                         />
                                     </FormControl>
@@ -195,9 +208,23 @@ const AddEventButton = () => {
                                 </FormItem>
                             )}
                         />
-                        <SheetClose asChild className='border w-full'>
-                            <Button type="submit" className='hover:underline ' variant={'outline'}>追加</Button>
-                        </SheetClose>
+                        <SheetFooter className='flex flex-col w-full p-0 gap-4'>
+                            <Button
+                                type="submit"
+                                className='hover:underline w-full'
+                                variant={'outline'}
+                            >
+                                {isSubmitting ? <Spinner /> : '追加'}
+                            </Button>
+                            <SheetClose asChild className='w-full'>
+                                <Button
+                                    variant="outline"
+                                    disabled={isSubmitting}
+                                >
+                                    キャンセル
+                                </Button>
+                            </SheetClose>
+                        </SheetFooter>
                     </form>
                 </Form>
             </SheetContent>

@@ -44,4 +44,12 @@ export type GetRepoParams = {
   isPublic?: string
 }
 
+export type DeleteConfirmAlertProps = {
+    open: boolean;
+    onOpenChange: (open: boolean) => void
+    onConfirmDelete: () => void
+    count: number
+    title: string
+}
+
 export type EventCardTypesSource = Partial<EventCardTypes>;
