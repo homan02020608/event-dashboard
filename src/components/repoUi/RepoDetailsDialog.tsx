@@ -24,9 +24,10 @@ type RepoDetailsProps = {
     sheets: string
     date: Date
     venue: string
+    isEditMode: boolean
 }
 
-const RepoDetailsDialog = ({ repoId, artistName, part, sheets, date, venue }: RepoDetailsProps) => {
+const RepoDetailsDialog = ({ repoId, artistName, part, sheets, date, venue, isEditMode }: RepoDetailsProps) => {
     const [isOpen, setIsOpen] = useState(false)
     const { data: repo, error, isLoading } = useSWR(
         isOpen ? ['repo', repoId] : null,
@@ -40,7 +41,7 @@ const RepoDetailsDialog = ({ repoId, artistName, part, sheets, date, venue }: Re
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger><KeyboardArrowRightIcon fontSize='large' /></DialogTrigger>
+            <DialogTrigger disabled={isEditMode}><KeyboardArrowRightIcon fontSize='large' /></DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>{artistName} {part}部</DialogTitle>

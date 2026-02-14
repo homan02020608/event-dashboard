@@ -15,9 +15,9 @@ import { deleteReport } from '@/app/repo/action';
 
 
 const RepoList = ({ repoData }: { repoData: RepoDataTypes[] }) => {
-    const [isEditMode, setIsEditMode] = useState(false);
+    const [isEditMode, setIsEditMode] = useState<boolean>(false);
     const [selectedRepoId, setSelectedRepoId] = useState<Set<string>>(new Set());
-    const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+    const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false);
     const [isPending, startTransition] = useTransition();
 
     //checkBoxのtrue/false判定
@@ -123,6 +123,7 @@ const RepoList = ({ repoData }: { repoData: RepoDataTypes[] }) => {
                 onOpenChange={setShowConfirmAlert}
                 onConfirmDelete={handleDelete}
                 count={selectedRepoId.size}
+                title={`レポート`}
             />
         </div>
     )

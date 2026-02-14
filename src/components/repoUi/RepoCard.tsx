@@ -42,6 +42,7 @@ const RepoCard = ({ id, artistName, part, sheets, date, venue, repoType, isSelec
                     sheets={sheets}
                     date={date}
                     venue={venue}
+                    isEditMode={isEditMode}
                 />
             </div>
         </div>
