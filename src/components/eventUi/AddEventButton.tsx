@@ -51,7 +51,7 @@ const formSchema = z.object({
     eventStartTime: z.string().min(1),
 })
 
-const AddEventButton = () => {
+const AddEventButton = ({ isEditMode }: { isEditMode: boolean }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -77,7 +77,7 @@ const AddEventButton = () => {
         //console.log(values)
         const result = await createEvent(formData)
 
-        if (result.success){
+        if (result.success) {
             form.reset()
             setIsOpen(false)
             toast("追加成功しました", { position: 'bottom-center' })
@@ -89,7 +89,7 @@ const AddEventButton = () => {
     const { isSubmitting } = form.formState
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild className=''>
+            <SheetTrigger asChild disabled={isEditMode}>
                 <Button variant={'outline'}>イベント追加</Button>
             </SheetTrigger>
             <SheetContent>

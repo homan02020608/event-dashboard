@@ -17,8 +17,10 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
     const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false)
     const [isPending, startTransition] = useTransition();
 
-    const selectCheckBox = (id: string) => {
+    const selectCheckBox = (id: string , isEditMode: boolean) => {
         const newSelectedEvent = new Set(selectedEventId);
+        if(!isEditMode) return
+
         if (newSelectedEvent.has(id)) {
             newSelectedEvent.delete(id)
         } else {
@@ -46,12 +48,12 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
             toast('削除失敗、しばらくしてからもう一度お試しください', { position: 'bottom-center' })
         }
     }
-
+    
     return (
         <div>
             <div className='flex-Between flex-row overflow-auto'>
                 <div className='flex-Center gap-2 '>
-                    <AddEventButton />
+                    <AddEventButton isEditMode={isEditMode}/>
                     {isEditMode ?
                         <>
                             <Button
@@ -81,7 +83,7 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
                     <div key={event.id} className='static flex flex-col my-4 bg-white rounded-xl text-black shadow-md '>
                         <Checkbox
                             className={`absolute ${isEditMode ? 'visible' : 'invisible'} `}
-                            onClick={() => selectCheckBox(event.id)}
+                            onClick={() => selectCheckBox(event.id, isEditMode)}
                             checked={selectedEventId.has(event.id)}
                         />
                         <div className='w-full'>
@@ -93,7 +95,7 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
                                 eventStartTime={event.eventStartTime}
                                 isSelected={selectedEventId.has(event.id)}
                                 isEditMode={isEditMode}
-                                onToggle={() => selectCheckBox(event.id)}
+                                onToggle={() => selectCheckBox(event.id , isEditMode)}
                             />
                         </div>
                     </div>
