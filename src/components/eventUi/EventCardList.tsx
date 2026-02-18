@@ -10,6 +10,7 @@ import { EventCardTypes } from '@/types/type'
 import { deleteEvents } from '@/app/events/action'
 import { toast } from 'sonner'
 import DeleteConfirmAlertDialog from '../repoUi/DeleteConfirmAlertDialog'
+import SortDropdownMenu from '../repoUi/SortDropdownMenu'
 
 const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -76,6 +77,11 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
                             <Button variant="outline" onClick={() => setIsEditMode(true)}>編集<ModeEditIcon /></Button>
                         </>
                     }
+                </div>
+                <div className='flex-Center gap-2'>
+                    <SortDropdownMenu
+                        startTransition={startTransition}
+                    />
                 </div>
             </div>
             <div className=''>
