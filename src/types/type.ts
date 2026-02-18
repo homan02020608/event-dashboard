@@ -8,7 +8,7 @@ export type EventCardTypes = {
   venue: string
   seat: string
   createdAt: Date
-  upadatedAt: Date
+  updatedAt: Date
 }
 
 export type EventFormData = {
@@ -42,6 +42,10 @@ export type GetRepoParams = {
   repoType?: string
   artistName?: string
   isPublic?: string
+}
+
+export type GetEventParmas = {
+  sort?: string
 }
 
 export type DeleteConfirmAlertProps = {

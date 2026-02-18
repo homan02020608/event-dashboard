@@ -1,14 +1,19 @@
 import React from 'react'
-import { getAllEventDataById } from './data'
+import { getEventData } from './data'
 import EventCardList from '@/components/eventUi/EventCardList'
+import { GetEventParmas } from '@/types/type'
 
-const page = async () => {
-  const eventData = await getAllEventDataById()
+const page = async ({ searchParams }: { searchParams: GetEventParmas }) => {
+  const { sort } = await searchParams
+  const sortValues = sort || 'date_desc'
+  const eventData = await getEventData({
+    sort: sortValues
+  })
 
   return (
     <div className="bg-white/70 shadow-2xl rounded-lg m-2 mx-4 p-2">
       <h1 className='text-2xl p-2 flex-Center'>参戦履歴</h1>
-      <EventCardList eventData={eventData}/>
+      <EventCardList eventData={eventData} />
     </div>
   )
 }
