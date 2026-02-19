@@ -4,10 +4,11 @@ import EventCardList from '@/components/eventUi/EventCardList'
 import { GetEventParmas } from '@/types/type'
 
 const page = async ({ searchParams }: { searchParams: GetEventParmas }) => {
-  const { sort } = await searchParams
+  const { sort, region } = await searchParams
   const sortValues = sort || 'date_desc'
   const eventData = await getEventData({
-    sort: sortValues
+    sort: sortValues,
+    region: region
   })
 
   return (

@@ -1,11 +1,13 @@
 import ChartSession from "@/components/chart/ChartSession";
 import { EventTable } from "@/components/EventTable";
 import HomePageInfoCardList from "@/components/HomePageInfoCardList";
-import { getAllEventDataById } from "./events/data";
+import { getEventDataForCalculat } from "./events/data";
+
+
 
 
 export default async function Home() {
-  const eventData = await getAllEventDataById()
+  const eventData = await getEventDataForCalculat()
   return (
     <div className="bg-white/70 shadow-2xl rounded-lg m-2 mx-4 p-2 *:m-4">
       <h1 className="text-2xl font-semibold">Welcome Guest!</h1>

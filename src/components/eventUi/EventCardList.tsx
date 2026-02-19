@@ -11,6 +11,21 @@ import { deleteEvents } from '@/app/events/action'
 import { toast } from 'sonner'
 import DeleteConfirmAlertDialog from '../repoUi/DeleteConfirmAlertDialog'
 import SortDropdownMenu from '../repoUi/SortDropdownMenu'
+import FilterSheetMenu from '../repoUi/FilterSheetMenu'
+import { FilterColumn } from '@/types/filter'
+
+const EVENT_FILTER_COLUMN: FilterColumn[] = [
+    {
+        key: 'region',
+        title: '開催地域',
+        options: [
+            { label: '東京都', value: '東京都' },
+            { label: '静岡', value: '静岡' },
+            { label: '横浜', value: '横浜' },
+            { label: '北海道', value: '北海道' },
+        ]
+    },
+]
 
 const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -18,9 +33,9 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
     const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false)
     const [isPending, startTransition] = useTransition();
 
-    const selectCheckBox = (id: string , isEditMode: boolean) => {
+    const selectCheckBox = (id: string, isEditMode: boolean) => {
         const newSelectedEvent = new Set(selectedEventId);
-        if(!isEditMode) return
+        if (!isEditMode) return
 
         if (newSelectedEvent.has(id)) {
             newSelectedEvent.delete(id)
@@ -49,12 +64,12 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
             toast('削除失敗、しばらくしてからもう一度お試しください', { position: 'bottom-center' })
         }
     }
-    
+
     return (
         <div>
             <div className='flex-Between flex-row overflow-auto'>
                 <div className='flex-Center gap-2 '>
-                    <AddEventButton isEditMode={isEditMode}/>
+                    <AddEventButton isEditMode={isEditMode} />
                     {isEditMode ?
                         <>
                             <Button
@@ -82,6 +97,10 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
                     <SortDropdownMenu
                         startTransition={startTransition}
                     />
+                    <FilterSheetMenu
+                        columns={EVENT_FILTER_COLUMN}
+                        startTransition={startTransition}
+                    />
                 </div>
             </div>
             <div className=''>
@@ -101,7 +120,7 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
                                 eventStartTime={event.eventStartTime}
                                 isSelected={selectedEventId.has(event.id)}
                                 isEditMode={isEditMode}
-                                onToggle={() => selectCheckBox(event.id , isEditMode)}
+                                onToggle={() => selectCheckBox(event.id, isEditMode)}
                             />
                         </div>
                     </div>

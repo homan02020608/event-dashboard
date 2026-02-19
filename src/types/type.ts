@@ -1,14 +1,14 @@
 export type EventCardTypes = {
   id: string
-  authorId: string
+  authorId?: string
   title: string
   date: Date
   eventStartTime: string
   region: string
   venue: string
   seat: string
-  createdAt: Date
-  updatedAt: Date
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export type EventFormData = {
@@ -46,6 +46,7 @@ export type GetRepoParams = {
 
 export type GetEventParmas = {
   sort?: string
+  region?: string
 }
 
 export type DeleteConfirmAlertProps = {
