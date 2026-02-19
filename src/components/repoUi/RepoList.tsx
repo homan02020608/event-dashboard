@@ -12,7 +12,28 @@ import SortDropdownMenu from './SortDropdownMenu';
 import FilterSheetMenu from './FilterSheetMenu';
 import { Spinner } from '../ui/spinner';
 import { deleteReport } from '@/app/repo/action';
+import { FilterColumn } from '@/types/filter';
 
+const REPO_FILTER_COLUMN: FilterColumn[] = [
+  {
+    key: 'repoType',
+    title: 'レポ種類',
+    options: [
+      { label: 'online_meeting', value: 'online_meeting' },
+      { label: 'online_sign', value: 'online_sign' },
+      { label: 'real_meeting', value: 'real_meeting' },
+      { label: 'real_sign', value: 'real_sign' },
+    ]
+  },
+  {
+    key: 'isPublic',
+    title: '公開',
+    options: [
+      { label: '公開中', value: 'true' },
+      { label: '非公開', value: 'false' },
+    ]
+  }
+]
 
 const RepoList = ({ repoData }: { repoData: RepoDataTypes[] }) => {
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -85,7 +106,8 @@ const RepoList = ({ repoData }: { repoData: RepoDataTypes[] }) => {
                     <SortDropdownMenu
                         startTransition={startTransition}
                     />
-                    <FilterSheetMenu 
+                    <FilterSheetMenu
+                         columns={REPO_FILTER_COLUMN}
                         startTransition={startTransition}
                     />
                 </div>
