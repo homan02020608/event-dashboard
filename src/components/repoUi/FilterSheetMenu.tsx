@@ -21,33 +21,15 @@ import TuneIcon from '@mui/icons-material/Tune';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox'
+import { FilterColumn } from '@/types/filter'
 
-type Props = {
+type FilterSheetMenuProps = {
+  columns: FilterColumn[];
   startTransition: React.TransitionStartFunction;
 }
 
-const FILTER_COLUMN = [
-  {
-    key: 'repoType',
-    title: 'レポ種類',
-    options: [
-      { label: 'online_meeting', value: 'online_meeting' },
-      { label: 'online_sign', value: 'online_sign' },
-      { label: 'real_meeting', value: 'real_meeting' },
-      { label: 'real_sign', value: 'real_sign' },
-    ]
-  },
-  {
-    key: 'isPublic',
-    title: '公開',
-    options: [
-      {label: '公開中', value: 'true'},
-      {label: '非公開', value: 'false'},
-    ]
-  }
-]
 
-const FilterSheetMenu = ({ startTransition }: Props) => {
+const FilterSheetMenu = ({ startTransition, columns }: FilterSheetMenuProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -89,7 +71,7 @@ const FilterSheetMenu = ({ startTransition }: Props) => {
           </SheetDescription>
         </SheetHeader>
         <Accordion type='multiple' className='w-full mt-4 border-2 p-2'>
-          {FILTER_COLUMN.map((section) => {
+          {columns.map((section) => {
             const selectedValues = searchParams.get(section.key)?.split(',') || [];
             return (
               <AccordionItem key={section.key} value={section.key}>
