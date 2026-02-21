@@ -1,3 +1,18 @@
+export type EventType = 
+  | 'CONCERT'
+  | 'REAL_MEETING'
+  | 'REAL_SIGN'
+  | 'REAL_GAMESEVENT'
+  | 'REAL_EVENT'
+  | 'ONLINE_MEETING'
+  | 'ONLINE_SIGN'
+  | 'OTHER';
+    
+export type EventStatus = 
+  | 'PLANNED'
+  | 'ATTENDED'
+  | 'CANCELLED';
+
 export type EventCardTypes = {
   id: string
   authorId?: string
@@ -7,6 +22,8 @@ export type EventCardTypes = {
   region: string
   venue: string
   seat: string
+  eventType?: EventType
+  status: EventStatus
   createdAt?: Date
   updatedAt?: Date
 }
@@ -50,11 +67,11 @@ export type GetEventParmas = {
 }
 
 export type DeleteConfirmAlertProps = {
-    open: boolean;
-    onOpenChange: (open: boolean) => void
-    onConfirmDelete: () => void
-    count: number
-    title: string
+  open: boolean;
+  onOpenChange: (open: boolean) => void
+  onConfirmDelete: () => void
+  count: number
+  title: string
 }
 
 export type EventCardTypesSource = Partial<EventCardTypes>;

@@ -39,6 +39,7 @@ export async function getEventData({ sort, region }: GetEventParmas) {
             venue: true,
             seat: true,
             eventStartTime: true,
+            
         },
         orderBy: {
             [safeField]: order
@@ -63,6 +64,5 @@ export async function getEventDataForCalculat(){
             date: 'desc'
         }
     })
-
     return userEvent
 }

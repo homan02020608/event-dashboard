@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { EventCardTypesSource } from "@/types/type"
+import { EventCardTypes } from "@/types/type"
 
 const invoices = [
   {
@@ -56,10 +56,16 @@ const invoices = [
 ]
 
 type EventsListProps = {
-  events: EventCardTypesSource[]
+  events: EventCardTypes[]
 }
 
-export function EventTable({ events }: EventsListProps) {
+const STATUS_LABEL = {
+  PLANNED: '参加予定',
+  ATTENDED: '参加済み',
+  CANCELLED: 'キャンセル'
+}
+
+export function EventTable({ events }:EventsListProps ) {
 
   return (
     <div className="max-w-xl lg:max-w-2xl w-full p-8 rounded-xl shadow-xl overflow-x-auto">
@@ -78,7 +84,7 @@ export function EventTable({ events }: EventsListProps) {
               <TableCell className="font-medium  ">{event.title}</TableCell>
               <TableCell className=" ">{event.region}</TableCell>
               <TableCell className="text-right ">{event.date?.toLocaleDateString('ja-JP')}</TableCell>
-              <TableCell className="text-right ">済</TableCell>
+              <TableCell className="text-right ">{STATUS_LABEL[event.status]}</TableCell>
             </TableRow>
           ))}
         </TableBody>
