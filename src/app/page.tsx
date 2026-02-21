@@ -3,9 +3,6 @@ import { EventTable } from "@/components/EventTable";
 import HomePageInfoCardList from "@/components/HomePageInfoCardList";
 import { getEventDataForCalculat } from "./events/data";
 
-
-
-
 export default async function Home() {
   const eventData = await getEventDataForCalculat()
   return (
@@ -13,13 +10,12 @@ export default async function Home() {
       <h1 className="text-2xl font-semibold">Welcome Guest!</h1>
       <HomePageInfoCardList
         eventCount={eventData.length}
-        recentEventTitle={eventData[eventData.length - 1].title}
+        recentEventTitle={eventData[0].title}
       />
       <div className="flex justify-center flex-col lg:flex-row gap-16 ">
         <EventTable events={eventData} />
         <ChartSession />
       </div>
-
     </div>
   )
 }
