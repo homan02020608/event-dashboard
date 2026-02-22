@@ -21,6 +21,16 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectSeparator,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Calendar } from "@/components/ui/calendar"
 import {
@@ -31,25 +41,39 @@ import {
 import { CalendarIcon } from 'lucide-react'
 import { format } from "date-fns"
 import { cn } from '@/lib/utils'
-
 import { Spinner } from '../ui/spinner'
 import { createEvent } from '@/app/events/action'
 import { toast } from 'sonner'
-
-
-
-
 
 const formSchema = z.object({
     eventTitle: z.string().min(1),
     region: z.string(),
     venue: z.string().min(1),
     seat: z.string().min(1),
+    eventType: z.string().min(1),
+    status: z.string().min(1),
     date: z.date({
         message: "A date of birth is required"
     }),
     eventStartTime: z.string().min(1),
 })
+
+const EVENTTYPE_SELECTITEMS = [
+    { value: 'CONCERT' ,label: 'コンサート' },
+    { value: 'REAL_MEETING', label:'リアルミード'},
+    { value: 'REAL_SIGN' ,label:'リアルサイン会'},
+    { value: 'REAL_GAMESEVENT',label:'リアルゲームイベント' },
+    { value: 'REAL_EVENT' ,label:'リアルイベント'},
+    { value: 'ONLINE_MEETING',label:'オンラインミード' },
+    { value: 'ONLINE_SIGN' ,label:'オンラインサイン会'},
+    { value: 'OTHER' ,label:'その他'},
+]
+
+const EVENTSTATUS_SELECTITEMS = [
+    {value: 'PLANNED' , label: '参加予定'},
+    {value: 'ATTENDED' , label: '参加済み'},
+    {value: 'CANCELLED' , label: 'キャンセル'},
+]
 
 const AddEventButton = ({ isEditMode }: { isEditMode: boolean }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -60,6 +84,8 @@ const AddEventButton = ({ isEditMode }: { isEditMode: boolean }) => {
             region: '',
             venue: '',
             seat: '',
+            eventType: '',
+            status: '',
             date: new Date(),
             eventStartTime: '12:00:00',
         },
@@ -72,6 +98,8 @@ const AddEventButton = ({ isEditMode }: { isEditMode: boolean }) => {
         formData.append('region', values.region)
         formData.append('venue', values.venue)
         formData.append('seat', values.seat)
+        formData.append('eventType', values.eventType)
+        formData.append('status', values.status)
         formData.append('date', values.date.toISOString())
         formData.append('eventStartTime', values.eventStartTime)
         //console.log(values)
@@ -97,7 +125,7 @@ const AddEventButton = ({ isEditMode }: { isEditMode: boolean }) => {
                     <SheetTitle>参戦イベント追加</SheetTitle>
                 </SheetHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-2 m-4">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 p-2 m-4">
                         <FormField
                             control={form.control}
                             name="eventTitle"
@@ -147,6 +175,52 @@ const AddEventButton = ({ isEditMode }: { isEditMode: boolean }) => {
                                         <Input placeholder="seat" {...field} />
                                     </FormControl>
                                     <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name='eventType'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>イベント種類</FormLabel>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="イベント種類選択" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {EVENTTYPE_SELECTITEMS.map((item) => (
+                                                <SelectItem value={item.value} key={item.value}>{item.label}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name='status'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>参加状況</FormLabel>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="参加状況" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {EVENTSTATUS_SELECTITEMS.map((item) => (
+                                                <SelectItem value={item.value} key={item.value}>{item.label}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />

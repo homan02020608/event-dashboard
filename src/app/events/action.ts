@@ -1,5 +1,8 @@
 'use server'
+
+import { EventStatus, EventType } from "@/generated/prisma/enums"
 import { prisma } from "@/lib/prisma"
+
 import { createClient } from "@/utils/supabase/server"
 import { revalidatePath } from "next/cache"
 
@@ -22,6 +25,8 @@ export async function createEvent(formData: FormData) {
                 region: formData.get('region') as string,
                 venue: formData.get('venue') as string,
                 seat: formData.get('seat') as string,
+                eventType: formData.get('eventType') as  EventType,
+                status: formData.get('status') as EventStatus,
             }
         })
         revalidatePath('/events')
