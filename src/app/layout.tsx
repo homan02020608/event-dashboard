@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/App-sidebar";
 import Header from "@/components/Header";
 import { Toaster } from "sonner";
@@ -34,6 +34,7 @@ export default function RootLayout({
           <SidebarProvider>
             <AppSidebar />
             <main className="bg-blue-50  w-full ">
+              <SidebarTrigger/>
               <Header/>
               {children}
             </main>
