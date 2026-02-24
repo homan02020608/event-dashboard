@@ -58,18 +58,19 @@ const items = [
 
 export function AppSidebar() {
   const [isLogged, setIsLoggedIn] = useState(true)
+  const [isOpen, setIsOpen] = useState(true)
   return (
-    <Sidebar variant="sidebar" className="text-white border-none bg-gray-500 rounded-full">
-      <SidebarHeader className="bg-black/80">ダッシュボード</SidebarHeader>
+    <Sidebar variant="sidebar" collapsible={'icon'} className="text-white border-none">
+      {/* <SidebarHeader className="bg-black/80">ダッシュボード</SidebarHeader> */}
       <SidebarContent className="bg-black/80 " >
         <SidebarGroup />
         <SidebarGroupLabel className="text-white">Event-Dashboard</SidebarGroupLabel>
         <SidebarGroupContent>
-          <SidebarMenu className="gap-10 p-4">
+          <SidebarMenu className="gap-10 ">
             {items.map((item) => (
-              <SidebarMenuButton asChild key={item.title} className="p-2 py-6 text-white rounded-md hover:bg-white/50">
-                <Link href={`${item.url}`}>
-                  <item.icon />
+              <SidebarMenuButton size={'lg'} asChild key={item.title} className="py-6 text-white rounded-md ">
+                <Link href={`${item.url}`} >
+                  <item.icon className="mx-1"/>
                   <span>{item.title}</span>
                 </Link>
               </SidebarMenuButton>
@@ -82,10 +83,10 @@ export function AppSidebar() {
         {
           isLogged ? (
             <div className="flex-Between w-full">
-              <div className="flex-Center bg-white text-black rounded-full m-2 p-2 ">
+              <div className="flex-Center bg-white text-black rounded-full">
                 <PersonIcon />
               </div>
-              <div className="flex-Start flex-col w-full font-semibold ">
+              <div className="flex-Start flex-col w-full font-semibold p-2">
                 <div className="w-full text-md ">ゲストさん</div>
                 <div className="w-full text-sm ">guestuser@gmail.com</div>
               </div>

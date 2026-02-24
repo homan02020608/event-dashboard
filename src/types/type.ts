@@ -23,7 +23,7 @@ export type EventCardTypes = {
   venue: string
   seat: string
   eventType?: EventType
-  status: EventStatus
+  status?: EventStatus
   createdAt?: Date
   updatedAt?: Date
 }
