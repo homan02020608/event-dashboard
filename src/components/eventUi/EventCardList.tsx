@@ -67,6 +67,7 @@ const EventCardList = ({ eventData }: { eventData: EventCardTypes[] }) => {
 
     return (
         <div>
+            {/* function bar */}
             <div className='flex-Between flex-row overflow-auto'>
                 <div className='flex-Center gap-2 '>
                     <AddEventButton isEditMode={isEditMode} />
