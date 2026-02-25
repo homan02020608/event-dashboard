@@ -11,7 +11,7 @@ import {
 
 const ExpensesTable = () => {
     return (
-        <Table className='border-2 p-2'>
+        <Table>
             <TableHeader>
                 <TableRow>
                     <TableHead className="w-[100px]">日付</TableHead>
