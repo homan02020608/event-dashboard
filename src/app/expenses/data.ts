@@ -24,7 +24,18 @@ export async function getExpensesData() {
             memo: true,
             date: true,
             eventId: true,
-        }
+        },
+        orderBy: { date: 'desc' }
     })
-    return userExpenses
+
+    const userEvent = await prisma.event.findMany({
+        where: { authorId: user.id },
+        select: {
+            id: true,
+            title: true,
+        },
+        orderBy: { date: 'desc' }
+    })
+
+    return { userExpenses, userEvent }
 }

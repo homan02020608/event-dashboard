@@ -1,4 +1,4 @@
-export type EventType = 
+export type EventType =
   | 'CONCERT'
   | 'REAL_MEETING'
   | 'REAL_SIGN'
@@ -7,8 +7,8 @@ export type EventType =
   | 'ONLINE_MEETING'
   | 'ONLINE_SIGN'
   | 'OTHER';
-    
-export type EventStatus = 
+
+export type EventStatus =
   | 'PLANNED'
   | 'ATTENDED'
   | 'CANCELLED';
@@ -72,6 +72,22 @@ export type DeleteConfirmAlertProps = {
   onConfirmDelete: () => void
   count: number
   title: string
+}
+
+export type ExpensesEventProps = {
+  id: string
+  title: string
+}
+
+export type ExpensesDataTypes = {
+  id: string
+  memo: string | null
+  category: string
+  amount: number
+  eventId: string | null
+  date: Date
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export type EventCardTypesSource = Partial<EventCardTypes>;
