@@ -8,8 +8,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import { ExpensesDataTypes } from '@/types/type'
 
-const ExpensesTable = () => {
+const ExpensesTable = ({ expensesData }: { expensesData: ExpensesDataTypes[] }) => {
     return (
         <Table>
             <TableHeader>
@@ -22,13 +23,22 @@ const ExpensesTable = () => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                <TableRow>
+                {/* <TableRow>
                     <TableCell className="font-medium">2026/02/23</TableCell>
                     <TableCell>OO公演</TableCell>
                     <TableCell>チケット代</TableCell>
                     <TableCell>ツアー東京</TableCell>
                     <TableCell className="text-right">￥12000</TableCell>
-                </TableRow>
+                </TableRow> */}
+                {expensesData.map((expense) => (
+                    <TableRow key={expense.id}>
+                        <TableCell className="font-medium">{expense.date.toLocaleDateString()}</TableCell>
+                        <TableCell>{expense.memo}</TableCell>
+                        <TableCell>{expense.category}</TableCell>
+                        <TableCell>{expense.eventId}</TableCell>
+                        <TableCell>￥{expense.amount}</TableCell>
+                    </TableRow>
+                )) }
             </TableBody>
         </Table>
     )
