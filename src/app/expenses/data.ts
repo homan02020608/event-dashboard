@@ -24,6 +24,11 @@ export async function getExpensesData() {
             memo: true,
             date: true,
             eventId: true,
+            event: {
+                select: {
+                    title: true
+                }
+            }
         },
         orderBy: { date: 'desc' }
     })

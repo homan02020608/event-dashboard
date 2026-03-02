@@ -88,6 +88,9 @@ export type ExpensesDataTypes = {
   date: Date
   createdAt?: Date
   updatedAt?: Date
+  event: {
+    title: string
+  } | null
 }
 
 export type EventCardTypesSource = Partial<EventCardTypes>;
