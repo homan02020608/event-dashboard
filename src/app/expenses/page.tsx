@@ -5,7 +5,7 @@ import { getExpensesData } from './data'
 
 const page = async () => {
   const expensesData = await getExpensesData()
-  
+
   return (
     <div className="bg-white/70 shadow-2xl rounded-lg m-2 mx-4 p-2 space-y-6">
       <h1 className='text-2xl flex-Center border'>費用管理一覧</h1>
