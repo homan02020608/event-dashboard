@@ -37,3 +37,20 @@ export async function createExpenses(formData: z.infer<typeof expensesFormSchema
         return { success: false, message: '送信失敗' }
     }
 }
+
+export async function deleteExpenses(ExpensesIds: string[]) {
+    try {
+        await prisma.expense.deleteMany({
+            where: {
+                id: {
+                    in: ExpensesIds
+                }
+            }
+        });
+        revalidatePath('/expenses')
+        return { success: true }
+    } catch (error) {
+        console.error('削除エラー', error)
+        return { success: false, error: '削除失敗' };
+    }
+}

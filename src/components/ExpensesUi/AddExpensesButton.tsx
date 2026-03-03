@@ -60,7 +60,7 @@ const CATEGORY_SELECTITEMS = [
     { value: 'OTHER', label: 'その他' },
 ]
 
-const AddExpensesButton = ({ eventSelectItemsData }: { eventSelectItemsData: ExpensesEventProps[] }) => {
+const AddExpensesButton = ({ eventSelectItemsData, isEditMode }: { eventSelectItemsData: ExpensesEventProps[]; isEditMode: boolean }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const form = useForm<z.infer<typeof expensesFormSchema>>({
         resolver: zodResolver(expensesFormSchema),
@@ -86,7 +86,7 @@ const AddExpensesButton = ({ eventSelectItemsData }: { eventSelectItemsData: Exp
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button variant={'outline'}>追加<AddIcon /></Button>
+                <Button variant={'outline'} disabled={isEditMode}>追加<AddIcon /></Button>
             </DialogTrigger>
             <DialogContent>
                 <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>

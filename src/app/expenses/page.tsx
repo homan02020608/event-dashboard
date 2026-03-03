@@ -1,7 +1,7 @@
 import ExpensesChartSession from '@/components/ExpensesUi/ExpensesChartSession'
-import ExpensesList from '@/components/ExpensesUi/ExpensesList'
 import React from 'react'
 import { getExpensesData } from './data'
+import ExpenseTable from '@/components/ExpensesUi/ExpenseTable'
 
 const page = async () => {
   const expensesData = await getExpensesData()
@@ -12,7 +12,7 @@ const page = async () => {
       {/* 費用関連のグラフセクション */}
       <ExpensesChartSession />
       {/* 実際の出費データ */}
-      <ExpensesList 
+      <ExpenseTable
         eventData={expensesData.userEvent}
         expensesData={expensesData.userExpenses}
       />
