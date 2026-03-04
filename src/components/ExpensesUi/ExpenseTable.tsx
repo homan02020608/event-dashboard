@@ -62,7 +62,7 @@ const ExpenseTable = ({ eventData, expensesData }: { eventData: ExpensesEventPro
   }
 
   return (
-    <div className='border-2 border-gray-400 h-[40vh] p-2'>
+    <div className='border border-gray-200 rounded-xl h-[50vh] p-2 scroll-auto '>
       <div className='flex-Between flex-row overflow-auto border-b-2 pb-2'>
         <div className='flex-Center gap-2'>
           <AddExpensesButton
