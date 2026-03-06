@@ -1,12 +1,14 @@
 import React from 'react'
 import ExpensesSummaryCard from './ExpensesSummaryCard'
-import { ExpensesSummaryProps } from '@/types/type'
+import { ExpensesDataTypes, ExpensesSummaryProps } from '@/types/type'
+import { ExpensesCategroyChart } from './ExpensesCategoryChart'
 
 type Props = {
   summaryData: ExpensesSummaryProps
+  expensesData: ExpensesDataTypes[]
 }
 
-const ExpensesChartSession = ({ summaryData }: Props) => {
+const ExpensesChartSession = ({ summaryData, expensesData }: Props) => {
   return (
     <div className='flex border border-gray-400 h-[30vh] p-2 gap-4'>
       {/* Summary Session 文字や数字情報のみ */}
@@ -16,8 +18,12 @@ const ExpensesChartSession = ({ summaryData }: Props) => {
         currentMonthTotal={summaryData.currentMonthTotal}
       />
       {/* グラフ集計情報 */}
-      <div className='flex flex-col border shadow-sm border-gray-400 rounded-2xl p-4'>
-        <div>グラフ</div>
+      <div className='flex flex-col border shadow-sm border-gray-400 rounded-2xl'>
+        <div className='flex'>
+          <ExpensesCategroyChart
+            expensesData={expensesData}
+          />
+        </div>
       </div>
     </div>
   )
