@@ -90,6 +90,7 @@ export type ExpensesDataTypes = {
   updatedAt?: Date
   event: {
     title: string
+    date?: Date
   } | null
 }
 

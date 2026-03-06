@@ -1,5 +1,6 @@
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { ExpensesDataTypes } from "@/types/type";
 import { createClient } from "@/utils/supabase/server";
 
 
@@ -26,7 +27,8 @@ export async function getExpensesData() {
             eventId: true,
             event: {
                 select: {
-                    title: true
+                    title: true,
+                    date: true,
                 }
             }
         },
@@ -45,7 +47,7 @@ export async function getExpensesData() {
     return { userExpenses, userEvent }
 }
 
-export async function getExpensesSummaryData() {
+export async function getAnnualExpenseCount() {
     const supabase = createClient()
     const { data: { user } } = await (await supabase).auth.getUser()
 
@@ -53,9 +55,8 @@ export async function getExpensesSummaryData() {
         throw new Error('ログインしてください')
     }
 
-    const now = new Date()
-    const currentYear = now.getFullYear()
-    const currentMonth = now.getMonth()
+    const now = new Date();
+    const currentYear = now.getFullYear();
 
     //年間参加回数を取得
     const annualEventCount = await prisma.event.count({
@@ -67,15 +68,13 @@ export async function getExpensesSummaryData() {
             }
         },
     })
+    return annualEventCount
+}
 
-    const expenses = await prisma.expense.findMany({
-        where: { authodId: user.id },
-        include: {
-            event: {
-                select: { date: true },
-            }
-        }
-    })
+export function calculateSummary(expenses: ExpensesDataTypes[]) {
+    const now = new Date()
+    const currentYear = now.getFullYear()
+    const currentMonth = now.getMonth()
 
     let currentYearTotal = 0;
     let currentMonthTotal = 0;
@@ -88,7 +87,7 @@ export async function getExpensesSummaryData() {
         //年間の合計計算
         if (expYear === currentYear) {
             currentYearTotal += expense.amount;
-            
+
             //今月の合計計算
             if (expMonth === currentMonth) {
                 currentMonthTotal += expense.amount;
@@ -96,14 +95,8 @@ export async function getExpensesSummaryData() {
         }
     })
 
-    //月間平均額の計算
     const passedMonths = currentMonth + 1;
-    const monthlyAverage = Math.round(currentYearTotal/passedMonths);
-    const summaryData = {
-        annualEventCount,
-        monthlyAverage,
-        currentMonthTotal
-    }
+    const monthlyAverage = Math.round(currentYearTotal / passedMonths);
 
-    return { summaryData }
+    return { monthlyAverage, currentMonthTotal }
 }
