@@ -66,63 +66,75 @@ export function ExpensesCategroyChart({ expensesData }: { expensesData: Expenses
             fill: chartConfig[category as keyof typeof chartConfig]?.color || "hsl(var(--muted))",
         })).sort((a, b) => b.amount - a.amount)
     }, [expensesData, currentYear]);
-    
+
     //本年度の合計金額計算
     const totalAmount = useMemo(() => {
         return chartData.reduce((acc, curr) => acc + curr.amount, 0)
-    },[chartData]);
+    }, [chartData]);
 
     return (
-        <div className="mx-auto w-full h-[180px] flex-Start flex-col p-2">
-            <div className="font-semibold w-full p-2">年間出費割合</div>
-            <ChartContainer
-                config={chartConfig}
-                className="aspect-square h-full w-full "
-            >
-                <PieChart>
-                    <ChartTooltip
-                        cursor={false}
-                        content={<ChartTooltipContent hideLabel />}
-                    />
-                    <Pie
-                        data={chartData}
-                        dataKey="amount"
-                        nameKey="category"
-                        innerRadius={50}
-                        outerRadius={70}
-                    >
-                        <Label
-                            content={({ viewBox }) => {
-                                if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                                    return (
-                                        <text
-                                            x={viewBox.cx}
-                                            y={viewBox.cy}
-                                            textAnchor="middle"
-                                            dominantBaseline="middle"
-                                        >
-                                            <tspan
+        <div className="flex-Center flex-col p-2 w-full">
+            <div className="font-semibold w-full p-2 ">年間出費割合</div>
+            <div className="flex w-full mx-auto h-[220px] lg:h-[200px] gap-2">
+                <ChartContainer
+                    config={chartConfig}
+                    className="aspect-square h-full w-full  "
+                >
+                    <PieChart>
+                        <ChartTooltip
+                            cursor={false}
+                            content={<ChartTooltipContent hideLabel />}
+                        />
+                        <Pie
+                            data={chartData}
+                            dataKey="amount"
+                            nameKey="category"
+                            innerRadius={50}
+                            outerRadius={70}
+                        >
+                            <Label
+                                content={({ viewBox }) => {
+                                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                                        return (
+                                            <text
                                                 x={viewBox.cx}
                                                 y={viewBox.cy}
-                                                className="fill-foreground text-lg font-semibold"
+                                                textAnchor="middle"
+                                                dominantBaseline="middle"
                                             >
-                                                ￥{totalAmount}
-                                            </tspan>
-                                            <tspan
-                                                x={viewBox.cx}
-                                                y={(viewBox.cy || 0) + 24}
-                                                className="fill-muted-foreground text-xs"
-                                            >
-                                                年間合計
-                                            </tspan>
-                                        </text>
-                                    )
-                                }
-                            }}
-                        />
-                    </Pie>
-                </PieChart>
-            </ChartContainer>
+                                                <tspan
+                                                    x={viewBox.cx}
+                                                    y={viewBox.cy}
+                                                    className="fill-foreground text-lg font-semibold"
+                                                >
+                                                    ￥{totalAmount}
+                                                </tspan>
+                                                <tspan
+                                                    x={viewBox.cx}
+                                                    y={(viewBox.cy || 0) + 24}
+                                                    className="fill-muted-foreground text-xs"
+                                                >
+                                                    年間合計
+                                                </tspan>
+                                            </text>
+                                        )
+                                    }
+                                }}
+                            />
+                        </Pie>
+                    </PieChart>
+                </ChartContainer>
+                 {/* カテゴリ別合計データ */}
+                <div className="flex flex-col p-2 text-sm">
+                    <div className="font-semibold">カテゴリ別</div>
+                    {chartData.map((chart) => (
+                        <div key={chart.category} className="flex flex-col font-extralight py-2">
+                            <div>{chart.category}</div>
+                            <div className="font-semibold">¥{chart.amount}</div>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     )
 }

@@ -10,7 +10,7 @@ type Props = {
 
 const ExpensesChartSession = ({ summaryData, expensesData }: Props) => {
   return (
-    <div className='flex border border-gray-400 h-[30vh] p-2 gap-4'>
+    <div className='flex flex-col md:flex-row border-gray-400 lg:h-[35vh] p-2 gap-4 w-full overflow-y-scroll'>
       {/* Summary Session 文字や数字情報のみ */}
       <ExpensesSummaryCard
         annualEventCount={summaryData.annualEventCount}
@@ -18,13 +18,17 @@ const ExpensesChartSession = ({ summaryData, expensesData }: Props) => {
         currentMonthTotal={summaryData.currentMonthTotal}
       />
       {/* グラフ集計情報 */}
-      <div className='flex flex-col border shadow-sm border-gray-400 rounded-2xl'>
-        <div className='flex'>
-          <ExpensesCategroyChart
-            expensesData={expensesData}
-          />
-        </div>
+      <div className='flex border shadow-sm border-gray-400 rounded-2xl'>
+        <ExpensesCategroyChart
+          expensesData={expensesData}
+        />
       </div>
+      <div className='flex border shadow-sm border-gray-400 rounded-2xl'>
+        <ExpensesCategroyChart
+          expensesData={expensesData}
+        />
+      </div>
+
     </div>
   )
 }
