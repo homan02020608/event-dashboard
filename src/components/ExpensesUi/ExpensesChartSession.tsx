@@ -1,14 +1,16 @@
 import React from 'react'
 import ExpensesSummaryCard from './ExpensesSummaryCard'
-import { ExpensesDataTypes, ExpensesSummaryProps } from '@/types/type'
+import { EventsForChartDataProps, ExpensesDataTypes, ExpensesSummaryProps } from '@/types/type'
 import { ExpensesCategroyChart } from './ExpensesCategoryChart'
+import ExpensesTypeChart from './ExpensesTypeChart'
 
 type Props = {
   summaryData: ExpensesSummaryProps
   expensesData: ExpensesDataTypes[]
+  eventsForChartData: EventsForChartDataProps[]
 }
 
-const ExpensesChartSession = ({ summaryData, expensesData }: Props) => {
+const ExpensesChartSession = ({ summaryData, expensesData, eventsForChartData }: Props) => {
   return (
     <div className='flex flex-col md:flex-row border-gray-400 lg:h-[35vh] p-2 gap-4 w-full overflow-y-scroll'>
       {/* Summary Session 文字や数字情報のみ */}
@@ -28,7 +30,11 @@ const ExpensesChartSession = ({ summaryData, expensesData }: Props) => {
           expensesData={expensesData}
         />
       </div>
-
+      <div className='flex border shadow-sm border-gray-400 rounded-2xl'>
+        <ExpensesTypeChart
+          eventsForChartData={eventsForChartData}
+        />
+      </div>
     </div>
   )
 }

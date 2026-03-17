@@ -71,6 +71,33 @@ export async function getAnnualExpenseCount() {
     return annualEventCount
 }
 
+export async function getEventsForChart() {
+    const supabase = createClient()
+    const { data: { user } } = await (await supabase).auth.getUser()
+
+    if (!user) {
+        throw new Error('ログインしてください')
+    }
+
+    const currentYear = new Date().getFullYear();
+    const startOfYear = new Date(currentYear, 0, 1);
+    const endOfYear = new Date(currentYear + 1, 0, 1);
+
+    const eventsForChartData = await prisma.event.findMany({
+        where: {
+            authorId: user.id,
+            date: {
+                gte: startOfYear,
+                lt: endOfYear,
+            },
+        },
+        select: {
+            eventType: true,
+        }
+    })
+    return eventsForChartData;
+}
+
 export function calculateSummary(expenses: ExpensesDataTypes[]) {
     const now = new Date()
     const currentYear = now.getFullYear()

@@ -1,16 +1,17 @@
 import ExpensesChartSession from '@/components/ExpensesUi/ExpensesChartSession'
 import React from 'react'
-import { calculateSummary, getAnnualExpenseCount, getExpensesData } from './data'
+import { calculateSummary, getAnnualExpenseCount, getEventsForChart, getExpensesData } from './data'
 import ExpenseTable from '@/components/ExpensesUi/ExpenseTable'
 
 const page = async () => {
   //const expensesData = await getExpensesData();
   //const { summaryData } = await getExpensesSummaryData();
-  const [expensesData, annualEventCount] = await Promise.all([
+  const [expensesData, annualEventCount, eventsForChartData] = await Promise.all([
     getExpensesData(),
-    getAnnualExpenseCount()
+    getAnnualExpenseCount(),
+    getEventsForChart()
   ])
-
+  
   const { monthlyAverage, currentMonthTotal } = calculateSummary(expensesData.userExpenses)
 
   return (
@@ -24,6 +25,7 @@ const page = async () => {
           currentMonthTotal
         }}
         expensesData={expensesData.userExpenses}
+        eventsForChartData={eventsForChartData}
       />
       {/* 実際の出費データ */}
       <ExpenseTable

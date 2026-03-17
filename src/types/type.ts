@@ -100,4 +100,8 @@ export type ExpensesSummaryProps = {
   currentMonthTotal?: number;
 }
 
+export type EventsForChartDataProps = {
+  eventType: string
+}
+
 export type EventCardTypesSource = Partial<EventCardTypes>;
