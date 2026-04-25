@@ -1,5 +1,4 @@
 "use client"
-
 import { Label, Pie, PieChart } from "recharts"
 import {
     ChartContainer,
@@ -7,8 +6,8 @@ import {
     ChartTooltipContent,
     type ChartConfig,
 } from "@/components/ui/chart"
-import { ExpensesDataTypes } from "@/types/type"
 import { useMemo } from "react"
+import { CategorySummaryDataProps } from "@/types/type"
 
 
 const chartData_test = [
@@ -43,34 +42,21 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function ExpensesCategroyChart({ expensesData }: { expensesData: ExpensesDataTypes[] }) {
+export function ExpensesCategroyChart({ categorySummaryData }: { categorySummaryData: CategorySummaryDataProps[] }) {
     const currentYear = new Date().getFullYear();
-
-    //データをカテゴリごとに集計するロジック
+    //バックエンドから計算済みのグラフ用データが渡される(カテゴリ別)
     const chartData = useMemo(() => {
-        const categoryTotals: Record<string, number> = {};
-
-        expensesData.forEach((expense) => {
-            const targetDate = expense.event?.date ? new Date(expense.event.date) : new Date(expense.date);
-
-            if (targetDate.getFullYear() === currentYear) {
-                const category = expense.category || 'OTHER';
-                categoryTotals[category] = (categoryTotals[category] || 0) + expense.amount;
-            }
-        });
-
-        //グラフが表示できる形に変換
-        return Object.entries(categoryTotals).map(([category, amount]) => ({
-            category,
-            amount,
-            fill: chartConfig[category as keyof typeof chartConfig]?.color || "hsl(var(--muted))",
-        })).sort((a, b) => b.amount - a.amount)
-    }, [expensesData, currentYear]);
-
-    //本年度の合計金額計算
+        return categorySummaryData.map((item) => ({
+            category: item.category,
+            amount: item.amount,
+            fill: chartConfig[item.category as keyof typeof chartConfig]?.color || "hsl(var(--muted))"
+        }))
+        .sort((a, b) => b.amount - a.amount);
+    },[categorySummaryData]);
+    //合計の総額
     const totalAmount = useMemo(() => {
         return chartData.reduce((acc, curr) => acc + curr.amount, 0)
-    }, [chartData]);
+    },[chartData])
 
     return (
         <div className="flex-Center flex-col p-2 w-full">

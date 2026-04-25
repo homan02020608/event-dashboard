@@ -95,13 +95,18 @@ export type ExpensesDataTypes = {
 }
 
 export type ExpensesSummaryProps = {
-  annualEventCount?: number;
-  monthlyAverage?: number;
-  currentMonthTotal?: number;
+  annualEventCount: number;
+  monthlyAverage: number;
+  currentMonthTotal: number;
 }
 
 export type EventsForChartDataProps = {
-  eventType: string
+  eventType: string;
+}
+
+export type CategorySummaryDataProps = {
+  category: string;
+  amount: number;
 }
 
 export type EventCardTypesSource = Partial<EventCardTypes>;
